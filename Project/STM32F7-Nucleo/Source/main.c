@@ -48,7 +48,7 @@
 //#include "lwip/inet.h"
 //#include "lwip/sockets.h"
 
-#include "fmap.h"
+#include "perf_config.h"
 /** @addtogroup STM32F7xx_LL_Examples
   * @{
   */
@@ -71,6 +71,7 @@ static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
 static void SysTask_2(void* parameter);
+static void SysTask_3(void* parameter);
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -108,14 +109,12 @@ int main(void)
                NULL,
                tskIDLE_PRIORITY + 1,
                &SysTask1_Handler);
-  
-    xTaskCreate( SysTask_2,
+  xTaskCreate( SysTask_2,
                "System Task 2",
                configMINIMAL_STACK_SIZE * 2,
                NULL,
                tskIDLE_PRIORITY + 1,
-               &SysTask2_Handler);
-  
+               &SysTask1_Handler);
   
   /* Start scheduler */
   vTaskStartScheduler();
@@ -123,26 +122,28 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-  
+    __NOP();
   }
 }
 
-void SysTask_1(void* parameter) {
+void SysTask_1(void* parameter) 
+{
   (void) parameter;
-  TaskClockRateMHz_Config(8);
-  for(;;) {
-    printf("Task1\n");
-    vTaskDelay(100);
+
+  for(;;) 
+  {  TEST_FUNC_TaskPerf_ClockRateSwitch(60);
+    vTaskDelay(5000);
   }
 
 }
 
-void SysTask_2(void* parameter) {
+void SysTask_2(void* parameter) 
+{
   (void) parameter;
-  TaskClockRateMHz_Config(200);
-  for(;;) {
-    printf("Task 2\n");
-    vTaskDelay(100);
+
+  for(;;) 
+  {  TEST_FUNC_TaskPerf_ClockRateSwitch(216);
+    vTaskDelay(1000);
   }
 
 }
@@ -150,7 +151,7 @@ void SysTask_2(void* parameter) {
 /**
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow : 
-  *            System Clock source            = PLL (HSI)
+  *            System Clock source            = PLL (HSE)
   *            SYSCLK(Hz)                     = 216000000
   *            HCLK(Hz)                       = 216000000
   *            AHB Prescaler                  = 1

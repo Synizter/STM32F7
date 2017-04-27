@@ -321,6 +321,7 @@
           <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\lwip-2.0.2\src\include</state>
           <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\lwip-2.0.2\contrib-2.0.1\ports\stm32f7xx_freertos\include</state>
           <state>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_ETH_Driver\inc</state>
+          <state>$PROJ_DIR$\..\..\..\Utilities\f-scaling</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2194,6 +2195,21 @@
   <group>
     <name>User</name>
     <group>
+      <name>F-Scaling</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\fmap.c</name>
+        <excluded>
+          <configuration>Debug</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.h</name>
+      </file>
+    </group>
+    <group>
       <name>Network</name>
       <excluded>
         <configuration>Debug</configuration>
@@ -2205,9 +2221,6 @@
         <name>$PROJ_DIR$\..\Source\stm32f7xx_eth_netconf.c</name>
       </file>
     </group>
-    <file>
-      <name>$PROJ_DIR$\..\Source\fmap.c</name>
-    </file>
     <file>
       <name>$PROJ_DIR$\..\Source\main.c</name>
     </file>

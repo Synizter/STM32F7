@@ -128,22 +128,32 @@ int main(void)
 
 void SysTask_1(void* parameter) 
 {
+  uint32_t timer = 0;
   (void) parameter;
 
   for(;;) 
-  {  TEST_FUNC_TaskPerf_ClockRateSwitch(60);
-    vTaskDelay(5000);
+  {   
+    TEST_FUNC_TaskPerf_ClockRateSwitch(60);
+    //On-chip workload
+    timer = 400000000;
+    while(timer--);
+    vTaskDelay(100);
   }
 
 }
 
 void SysTask_2(void* parameter) 
 {
+  uint32_t timer = 0;
   (void) parameter;
 
   for(;;) 
-  {  TEST_FUNC_TaskPerf_ClockRateSwitch(216);
-    vTaskDelay(1000);
+  {  
+    TEST_FUNC_TaskPerf_ClockRateSwitch(216);
+    //On-chip workload
+    timer = 400000000;
+    while(timer--);
+    vTaskDelay(100);
   }
 
 }

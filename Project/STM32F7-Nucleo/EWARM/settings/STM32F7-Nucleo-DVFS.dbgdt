@@ -56,7 +56,7 @@
         <expressions>
           
           
-        <item>DHCP_state</item><item>temp</item><item></item></expressions>
+        <item>DHCP_state</item><item>temp</item><item/></expressions>
         <col-names>
           
           

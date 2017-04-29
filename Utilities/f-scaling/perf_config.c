@@ -242,7 +242,7 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
     /* Copy map pll configuration to temp var */
     temp = ClockRateScale_High[target_f - LOWER_BND_HIGH_CLK_RATE];
   }
-  
+  /* Insanity case, trap in inf loop */
   else 
   {
     while(1);

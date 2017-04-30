@@ -62,7 +62,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 TaskHandle_t SysTask1_Handler; 
-TaskHandle_t SysTask2_Handler; 
+TaskHandle_t SysTask2_Handler; \
+  
+//TESET
+uint8_t isLowest_ClockRate = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -72,6 +75,8 @@ static void CPU_CACHE_Enable(void);
 static void SysTask_1(void* parameter);
 static void SysTask_2(void* parameter);
 static void SysTask_3(void* parameter);
+//Idle task
+void vApplicationIdleHook( void );
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -79,6 +84,7 @@ static void SysTask_3(void* parameter);
   * @param  None
   * @retval None
   */
+
 int main(void)
 {
   /* This project template calls firstly two functions in order to configure MPU feature 
@@ -107,13 +113,7 @@ int main(void)
                "System Task 1",
                configMINIMAL_STACK_SIZE * 2,
                NULL,
-               tskIDLE_PRIORITY + 1,
-               &SysTask1_Handler);
-  xTaskCreate( SysTask_2,
-               "System Task 2",
-               configMINIMAL_STACK_SIZE * 2,
-               NULL,
-               tskIDLE_PRIORITY + 1,
+               tskIDLE_PRIORITY + 3,
                &SysTask1_Handler);
   
   /* Start scheduler */
@@ -126,36 +126,42 @@ int main(void)
   }
 }
 
+uint32_t timer = 0;
 void SysTask_1(void* parameter) 
 {
-  uint32_t timer = 0;
+
   (void) parameter;
 
   for(;;) 
   {   
-    TEST_FUNC_TaskPerf_ClockRateSwitch(60);
+    TEST_FUNC_TaskPerf_ClockRateSwitch(216);
     //On-chip workload
-    timer = 400000000;
+    isLowest_ClockRate = 0;
+    timer = 4000000;
     while(timer--);
-    vTaskDelay(100);
+    timer = 0;
+    vTaskDelay(1000);
   }
 
 }
 
-void SysTask_2(void* parameter) 
+void vApplicationIdleHook(void) 
 {
-  uint32_t timer = 0;
-  (void) parameter;
-
-  for(;;) 
-  {  
-    TEST_FUNC_TaskPerf_ClockRateSwitch(216);
-    //On-chip workload
-    timer = 400000000;
-    while(timer--);
-    vTaskDelay(100);
+  isLowest_ClockRate = 1;
+      
+  if(!isLowest_ClockRate) 
+  {
+      /* Standby Operation */
+    PWR->CR1 &= ~(1 << 16);
+    /* Disable Overdrice Switching */
+    PWR->CR1 &= ~(1 << 17);
+    
+    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
+    while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE);
+    
+    SysTick_Config((8 * 1000000) / 1000);
+    SystemCoreClock = 8 * 1000000;
   }
-
 }
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */
 /**
@@ -206,20 +212,21 @@ void SystemClock_Config(void)
    };
   
   /* Main PLL configuration and activation */
-  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 432, LL_RCC_PLLP_DIV_2);
   LL_RCC_PLL_Enable();
   while(LL_RCC_PLL_IsReady() != 1) 
   {
   };
   
+  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 432, LL_RCC_PLLP_DIV_2);
+
   /* Sysclk activation on the main PLL */
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) 
   {
   };
   
   /* Set APB1 & APB2 prescaler*/
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_4);
   LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2);
   

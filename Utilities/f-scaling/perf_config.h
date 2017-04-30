@@ -7,16 +7,13 @@
 #define LOWER_BND_LOW_CLK_RATE			60
 #define UPPER_BND_LOW_CLK_RATE			144
 
-#define LOWER_BND_MID_CLK_RATE                  145  /** NOTE 169-180MHZ need over-drive mode **/
-#define UPPER_BND_MID_CLK_RATE                  179 
-#define OVDR_MID_CLK_RATE                       169
+#define MID_CLK_RATE                            168
 
 #define LOWER_BND_HIGH_CLK_RATE			180
 #define UPPER_BND_HIGH_CLK_RATE			216
 
 
 #define MID_CLK_RANGE				(UPPER_BND_MID_CLK_RATE - LOWER_BND_MID_CLK_RATE) + 1 
-#define LOW_CLK_RANGE				(UPPER_BND_LOW_CLK_RATE - LOWER_BND_LOW_CLK_RATE) + 1
 #define HIGH_CLK_RANGE				(UPPER_BND_HIGH_CLK_RATE - LOWER_BND_HIGH_CLK_RATE) + 1
 
 typedef struct PLLParamerter_Type

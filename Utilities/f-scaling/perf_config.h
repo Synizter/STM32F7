@@ -35,6 +35,7 @@ typedef struct TaskPreference_Type
 
 void TaskPerf_ClockRateSwitch(TaskPerfConf_t*, uint16_t);
 void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t);
-void TaskPerf_Evauate(TaskPerfConf_t*);
+void TaskPerf_Evauate(TaskPerfConf_t*);\
+uint8_t TaskPerf_isOnStandby() ;
 
 #endif

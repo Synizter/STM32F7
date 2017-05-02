@@ -5,6 +5,9 @@
 
 /* Private Prototype ******************************************************************/
 /* Private Variable *******************************************************************/
+static PLLParamCon_TypeDef ClkConfig;
+static uint8_t StandbyState = 0;
+
 const PLLParamCon_TypeDef ClockRateScale_Low[] = { 
 {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_4, 120, LL_RCC_PLLP_DIV_4},
 {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_4, 122, LL_RCC_PLLP_DIV_4},
@@ -133,60 +136,6 @@ const PLLParamCon_TypeDef ClockRateScale_High[] = {
 };
 const PLLParamCon_TypeDef ClockRateScale_Medium = {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_4, 168, LL_RCC_PLLP_DIV_2};
 
-
-void TaskPerf_ClockRateSwitch(TaskPerfConf_t* instance, uint16_t target_f)
-{
-	/*Low Range Frequency*/
-	if (target_f >= LOWER_BND_LOW_CLK_RATE && target_f <= UPPER_BND_LOW_CLK_RATE)
-	{
-		/* Disable Overdrive Mode */
-		LL_PWR_DisableOverDriveMode();
-		/* Disable Overdrice Switching */
-		LL_PWR_DisableOverDriveSwitching();
-		/* Using Scale 3 Mode (Low) */
-		LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE3);
-
-		/* Copy map pll configuration to temp var */
-		instance->Task_OptFreq = ClockRateScale_Low[target_f - LOWER_BND_LOW_CLK_RATE];
-	}
-	/*High Range Frequency*/
-	else if (target_f >= LOWER_BND_HIGH_CLK_RATE && target_f <= UPPER_BND_HIGH_CLK_RATE)
-	{
-		/* Enable Overdrive Mode */
-		LL_PWR_EnableOverDriveMode();
-		/* Enable Overdrice Switching */
-		LL_PWR_EnableOverDriveSwitching();
-		/* Using Scale 1 Mode (High) */
-		LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
-
-		/* Copy map pll configuration to temp var */
-		instance->Task_OptFreq = ClockRateScale_High[target_f - LOWER_BND_HIGH_CLK_RATE];
-	}
-	/*Medium Range Frequency*/
-	else if (target_f == MID_CLK_RATE)
-	{
-		/* Using Scale 1 Mode (High) */
-		LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE2);
-		/* Copy map pll configuration to temp var */
-		instance->Task_OptFreq = ClockRateScale_Medium;
-	}
-
-	else 
-	{
-		while(1);
-	}
-
-	LL_RCC_PLL_ConfigDomain_SYS(instance->Task_OptFreq.clock_src, 
-								instance->Task_OptFreq.pll_m, 
-								instance->Task_OptFreq.pll_n, 
-								instance->Task_OptFreq.pll_p);
-	
-	SysTick_Config((target_f * 1000000) / 1000);
-	SystemCoreClock = target_f * 1000000;
-	SystemCoreClockUpdate();
-}
-
-PLLParamCon_TypeDef temp;
 void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f) 
 {
   /* Re-route clock source to HSE */
@@ -200,16 +149,13 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
   if (target_f >= LOWER_BND_LOW_CLK_RATE && target_f <= UPPER_BND_LOW_CLK_RATE)
   {
     /* Disable Overdrive Mode */
-    //LL_PWR_DisableOverDriveMode();
-    PWR->CR1 &= ~(1 << 16);
     /* Disable Overdrice Switching */
-    //LL_PWR_DisableOverDriveSwitching();
-    PWR->CR1 &= ~(1 << 17);
+    PWR->CR1 &= ~(3 << 16);
     /* Using Scale 3 Mode (Low) */
     LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE3);
     
-    /* Copy map pll configuration to temp var */
-    temp = ClockRateScale_Low[target_f - LOWER_BND_LOW_CLK_RATE];
+    /* Copy map pll configuration to ClkConfig var */
+    ClkConfig = ClockRateScale_Low[target_f - LOWER_BND_LOW_CLK_RATE];
   }
   /*Medium Range Frequency ----------------------------------------------------*/
   else if (target_f == MID_CLK_RATE)
@@ -218,31 +164,32 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
     LL_PWR_DisableOverDriveMode();
     /* Disable Overdrice Switching */
     LL_PWR_DisableOverDriveSwitching();
-    /* Copy map pll configuration to temp var */
+    /* Copy map pll configuration to ClkConfig var */
     /* Using Scale 2 Mode (Medium) */
     LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE2);
-    temp = ClockRateScale_Medium;
+    ClkConfig = ClockRateScale_Medium;
   }
   /*High Range Frequency ------------------------------------------------------------*/
   else if (target_f >= LOWER_BND_HIGH_CLK_RATE && target_f <= UPPER_BND_HIGH_CLK_RATE)
   {
     /* Enable Overdrive Mode */
     LL_PWR_EnableOverDriveMode();
-    while(LL_PWR_IsActiveFlag_OD() != 1)
+    while(LL_PWR_IsActiveFlag_OD() != 1);
     /* Enable Overdrice Switching */
     LL_PWR_EnableOverDriveSwitching();  
-    while(LL_PWR_IsActiveFlag_ODSW() != 1)
+    while(LL_PWR_IsActiveFlag_ODSW() != 1);
     /* Using Scale 1 Mode (High) */
     LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
     
-    /* Copy map pll configuration to temp var */
-    temp = ClockRateScale_High[target_f - LOWER_BND_HIGH_CLK_RATE];
+    /* Copy map pll configuration to ClkConfig var */
+    ClkConfig = ClockRateScale_High[target_f - LOWER_BND_HIGH_CLK_RATE];
   }
   /* Insanity case, trap in inf loop */
   else 
   {
     if(target_f == 8) 
     {
+      StandbyState = 1;
       //LL_PWR_DisableOverDriveMode();
       PWR->CR1 &= ~(1 << 16);
       /* Disable Overdrice Switching */
@@ -251,26 +198,36 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
       
       SysTick_Config((target_f * 1000000) / 1000);
       SystemCoreClock = target_f * 1000000;
+      
+
       return;
     }
-    while(1);
+    else 
+    {
+      while(1);
+    }
   }
   
-  
+  StandbyState = 0;
   /* Main PLL configuration and activation */
   LL_RCC_PLL_Enable();
   while(LL_RCC_PLL_IsReady() != 1);
   
-  LL_RCC_PLL_ConfigDomain_SYS(temp.clock_src, 
-                              temp.pll_m, 
-                              temp.pll_n, 
-                              temp.pll_p);
+  LL_RCC_PLL_ConfigDomain_SYS(ClkConfig.clock_src, 
+                              ClkConfig.pll_m, 
+                              ClkConfig.pll_n, 
+                              ClkConfig.pll_p);
 
   /* Sysclk activation on the main PLL */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) ;
 
   
-  SysTick_Config((target_f * 1000000) / 1000);
-  SystemCoreClock = target_f * 1000000;
+//  SysTick_Config((target_f * 1000000) / 1000);
+//  SystemCoreClock = target_f * 1000000;
+}
+
+uint8_t TaskPerf_isOnStandby() 
+{
+  return StandbyState;
 }

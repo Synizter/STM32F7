@@ -120,43 +120,37 @@ int main(void)
   vTaskStartScheduler();
     
   /* Infinite loop */
-  while (1)
-  {
-    __NOP();
-  }
+  while (1);
 }
 
-uint32_t timer = 0;
+
 void SysTask_1(void* parameter) 
 {
-
   (void) parameter;
-
+  uint32_t timer = 0;
+  
   for(;;) 
   {   
-    TEST_FUNC_TaskPerf_ClockRateSwitch(216);
+    TEST_FUNC_TaskPerf_ClockRateSwitch(60);
     //On-chip workload
     isLowest_ClockRate = 0;
-    timer = 4000000;
+    timer = 40000000;
     while(timer--);
     timer = 0;
-    vTaskDelay(1000);
+    vTaskDelay(100);
   }
 
 }
 
 void vApplicationIdleHook(void) 
-{
-  isLowest_ClockRate = 1;
-      
-  if(!isLowest_ClockRate) 
+{      
+  if(TaskPerf_isOnStandby()) 
   {
-      /* Standby Operation */
-    PWR->CR1 &= ~(1 << 16);
-    /* Disable Overdrice Switching */
-    PWR->CR1 &= ~(1 << 17);
-    
+    /* Standby Operation */
+    /* Disable Overdrive Switching */
+    PWR->CR1 &= ~(3 << 16);
     LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
+    
     while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE);
     
     SysTick_Config((8 * 1000000) / 1000);

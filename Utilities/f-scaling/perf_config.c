@@ -197,7 +197,7 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
       PWR->CR1 &= ~(1 << 17);
       
       SysTick_Config((target_f * 1000000) / 1000);
-      SystemCoreClock = target_f * 1000000;
+      LL_SetSystemCoreClock(target_f * 1000000);
       
 
       return;
@@ -223,8 +223,8 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) ;
 
   
-//  SysTick_Config((target_f * 1000000) / 1000);
-//  SystemCoreClock = target_f * 1000000;
+  SysTick_Config((target_f * 1000000) / 1000);
+  LL_SetSystemCoreClock(target_f * 1000000);
 }
 
 uint8_t TaskPerf_isOnStandby() 

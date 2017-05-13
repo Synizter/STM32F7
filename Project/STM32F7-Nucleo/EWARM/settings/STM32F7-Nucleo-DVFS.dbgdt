@@ -38,7 +38,7 @@
         <expressions>
           
           
-        <item>IPAddressText</item><item>timer</item><item>isLowest_ClockRate</item><item></item></expressions>
+        <item>IPAddressText</item><item>timer</item><item>isLowest_ClockRate</item><item>taskDLCounter</item><item>InitialAutoreload</item><item>SystemCoreClock</item><item></item></expressions>
         <col-names>
           
           
@@ -56,7 +56,7 @@
         <expressions>
           
           
-        <item>DHCP_state</item><item>temp</item><item>ClkConfig</item><item></item></expressions>
+        <item>DHCP_state</item><item>temp</item><item>ClkConfig</item><item>InitialAutoreload</item><item>SystemCoreClock</item><item></item></expressions>
         <col-names>
           
           
@@ -68,7 +68,7 @@
           
           
           
-        <item>100</item><item>150</item><item>100</item><item>186</item></col-widths>
+        <item>150</item><item>150</item><item>100</item><item>186</item></col-widths>
       </WATCH_1>
     <TerminalIO><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><InputSource>1</InputSource><InputMode>10</InputMode><Filename>$PROJ_DIR$\TermIOInput.txt</Filename><InputEcho>1</InputEcho><ShowReset>0</ShowReset></TerminalIO><Register><RegFindHistory/><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Register></Static>
     <Windows>
@@ -100,7 +100,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>STM32F7-Nucleo-DVFS</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>STM32F7-Nucleo-DVFS</ExpandedNode><ExpandedNode>STM32F7-Nucleo-DVFS/CMSIS</ExpandedNode><ExpandedNode>STM32F7-Nucleo-DVFS/User</ExpandedNode><ExpandedNode>STM32F7-Nucleo-DVFS/User/F-Scaling</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -118,20 +118,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>1</SelectedTab></Wnd3><Wnd7><Tabs><Tab><Identity>TabID-32068-30354</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd7><Wnd9><Tabs><Tab><Identity>TabID-28995-3170</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><REG1>0</REG1><REG2>0</REG2><Group>49</Group><States>1</States><State0>PWR_CR1</State0></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd9></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd7><Tabs><Tab><Identity>TabID-32068-30354</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd7><Wnd9><Tabs><Tab><Identity>TabID-28995-3170</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><REG1>0</REG1><REG2>0</REG2><Group>54</Group><States>12</States><State0>NVIC_ICER0</State0><State1>NVIC_ISER4</State1><State2>NVIC_ISPR0</State2><State3>PWR_CR1</State3><State4>TIM2_CCR1</State4><State5>TIM2_CCR2</State5><State6>TIM2_CNT</State6><State7>TIM2_CR1</State7><State8>TIM2_CR2</State8><State9>TIM2_DCR</State9><State10>TIM2_OR1</State10><State11>TIM2_PSC</State11></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd9></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Include\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>75</YPos2><SelStart2>5767</SelStart2><SelEnd2>5767</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\f-scaling\perf_config.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>113</SelStart2><SelEnd2>113</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_rcc.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>2218</YPos2><SelStart2>121543</SelStart2><SelEnd2>121543</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Drivers\CMSIS\Include\core_cm7.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>2467</YPos2><SelStart2>136782</SelStart2><SelEnd2>136782</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>167</YPos2><SelStart2>9388</SelStart2><SelEnd2>9388</SelEnd2></Tab><ActiveTab>4</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\stm32f7xx_it.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>139</YPos2><SelStart2>4896</SelStart2><SelEnd2>4896</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>3178</YPos2><SelStart2>107180</SelStart2><SelEnd2>107180</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_pwr.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>295</YPos2><SelStart2>13073</SelStart2><SelEnd2>13073</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\f-scaling\perf_config.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>57</YPos2><SelStart2>531</SelStart2><SelEnd2>531</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>179</YPos2><SelStart2>7333</SelStart2><SelEnd2>7333</SelEnd2></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_tim.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>1539</YPos2><SelStart2>85435</SelStart2><SelEnd2>85435</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Drivers\CMSIS\Include\core_cm7.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>2382</YPos2><SelStart2>136335</SelStart2><SelEnd2>136335</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Utilities\f-scaling\perf_config.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>172</YPos2><SelStart2>11141</SelStart2><SelEnd2>11141</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_utils.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>41</YPos2><SelStart2>19856</SelStart2><SelEnd2>19856</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-02712A60><key>iaridepm.enu1</key></Toolbar-02712A60></Sizes></Row0><Row1><Sizes><Toolbar-0E02D9E8><key>debuggergui.enu1</key></Toolbar-0E02D9E8></Sizes></Row1><Row2><Sizes><Toolbar-0E02DAB0><key>armstlink2.enu1</key></Toolbar-0E02DAB0></Sizes></Row2></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>707</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>707</Bottom><Right>435</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>227604</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd3></Sizes></Row0><Row1><Sizes><Wnd7><Rect><Top>-2</Top><Left>433</Left><Bottom>707</Bottom><Right>633</Right><x>433</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd7></Sizes></Row1><Row2><Sizes><Wnd9><Rect><Top>-2</Top><Left>631</Left><Bottom>707</Bottom><Right>831</Right><x>631</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd9></Sizes></Row2></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200401</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-026B2A60><key>iaridepm.enu1</key></Toolbar-026B2A60></Sizes></Row0><Row1><Sizes><Toolbar-27A055A0><key>debuggergui.enu1</key></Toolbar-27A055A0></Sizes></Row1><Row2><Sizes><Toolbar-27A057F8><key>armstlink2.enu1</key></Toolbar-27A057F8></Sizes></Row2></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>707</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>707</Bottom><Right>326</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>170833</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd3></Sizes></Row0><Row1><Sizes><Wnd7><Rect><Top>-2</Top><Left>324</Left><Bottom>707</Bottom><Right>524</Right><x>324</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd7></Sizes></Row1><Row2><Sizes><Wnd9><Rect><Top>-2</Top><Left>522</Left><Bottom>707</Bottom><Right>1011</Right><x>522</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>254688</sizeVertCX><sizeVertCY>710421</sizeVertCY></Rect></Wnd9></Sizes></Row2></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200401</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

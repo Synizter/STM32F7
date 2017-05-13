@@ -62,6 +62,8 @@
 #include "stm32f7xx_ll_usart.h"
 #include "stm32f7xx_ll_wwdg.h"
 
+#include "stm32f7xx_it.h"
+
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"
 #endif /* USE_FULL_ASSERT */
@@ -103,7 +105,7 @@
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-
+void Task_DeadlineSupervisor();
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

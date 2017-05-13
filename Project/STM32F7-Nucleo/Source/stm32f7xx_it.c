@@ -187,5 +187,17 @@ void SysTick_Handler(void)
 /**
   * @}
   */
+void TIM2_IRQHandler() 
+{
+  /* Check whether update interrupt is pending */
+  if(LL_TIM_IsActiveFlag_UPDATE(TIM2) == 1)
+  {
+    /* Clear the update interrupt flag*/
+    LL_TIM_ClearFlag_UPDATE(TIM2);
+  }
+  
+  /* TIM2 update interrupt processing */
+  Task_DeadlineSupervisor();
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -2197,16 +2197,16 @@
     <group>
       <name>F-Scaling</name>
       <file>
-        <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\fmap.c</name>
-        <excluded>
-          <configuration>Debug</configuration>
-        </excluded>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\task_supervisor.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\task_supervisor.h</name>
       </file>
     </group>
     <group>
@@ -2221,6 +2221,9 @@
         <name>$PROJ_DIR$\..\Source\stm32f7xx_eth_netconf.c</name>
       </file>
     </group>
+    <file>
+      <name>$PROJ_DIR$\..\Include\FreeRTOSConfig.h</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\Source\main.c</name>
     </file>

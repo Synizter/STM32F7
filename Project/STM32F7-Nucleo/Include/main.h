@@ -68,44 +68,20 @@
 #include "stm32_assert.h"
 #endif /* USE_FULL_ASSERT */
 
+    
+#include "task_supervisor.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
-/* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */
-/**
-  * @brief LED1
-  */
-#define LED1_PIN                           LL_GPIO_PIN_1
-#define LED1_GPIO_PORT                     GPIOI
-#define LED1_GPIO_CLK_ENABLE()             LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOI)
-
-/**
-  * @brief Key push-button
-  */
-#define WAKEUP_BUTTON_PIN                         LL_GPIO_PIN_11
-#define WAKEUP_BUTTON_GPIO_PORT                   GPIOI
-#define WAKEUP_BUTTON_GPIO_CLK_ENABLE()           LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOI)
-#define WAKEUP_BUTTON_EXTI_LINE                   LL_EXTI_LINE_11
-#define WAKEUP_BUTTON_EXTI_IRQn                   EXTI15_10_IRQn
-#define WAKEUP_BUTTON_EXTI_LINE_ENABLE()          LL_EXTI_EnableIT_0_31(WAKEUP_BUTTON_EXTI_LINE)
-#define WAKEUP_BUTTON_EXTI_FALLING_TRIG_ENABLE()  LL_EXTI_EnableFallingTrig_0_31(WAKEUP_BUTTON_EXTI_LINE)
-#define WAKEUP_BUTTON_SYSCFG_SET_EXTI()           do {                                                                   \
-                                                  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);                  \
-                                                  LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTI, LL_SYSCFG_EXTI_LINE11);  \
-                                                } while(0)
-#define WAKEUP_BUTTON_IRQHANDLER                  EXTI15_10_IRQHandler                        
+/* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */                   
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE END      ============== */
 
 /**
   * @brief Toggle periods for various blinking modes
   */
-#define LED_BLINK_FAST  200
-#define LED_BLINK_SLOW  500
-#define LED_BLINK_ERROR 1000
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void Task_DeadlineSupervisor();
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

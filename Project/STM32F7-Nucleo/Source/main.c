@@ -58,29 +58,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define T1_F            8
-#define T2_F            8
-#define T3_F            8
-#define T4_F            8
+#define T1_F            80
+#define T1_DL           30
+
     
-#define T1_DL           200
-#define T2_DL           300
-#define T3_DL           210
-#define T4_DL           290
+    
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 TaskHandle_t SysTask1_Handler; 
-TaskHandle_t SysTask2_Handler; 
-TaskHandle_t SysTask3_Handler; 
-TaskHandle_t SysTask4_Handler; 
-
-  
-//TESET
-uint8_t isLowest_ClockRate = 0;
-uint8_t isDoneProc = 0;
-static uint32_t InitialAutoreload = 0;
-uint8_t currTask = 0;
-uint32_t taskDLCounter[4] = {0};
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -88,52 +73,11 @@ static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
-static void SysTask_2(void* parameter);
-static void SysTask_3(void* parameter);
-static void SysTask_4(void* parameter);
-//Idle task
 void vApplicationIdleHook( void );
 
 
 /* Private functions ---------------------------------------------------------*/
-void TaskPerf_TimerConfig() 
-{
-  /* Enable the timer peripheral clock */
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); 
-  
-  /* Set counter mode */
-  /* Reset value is LL_TIM_COUNTERMODE_UP */
-  LL_TIM_SetCounterMode(TIM2, LL_TIM_COUNTERMODE_UP);
 
-  /* Set the pre-scaler value to have TIM1 counter clock equal to 10 kHz      */
-  /*
-   In this example TIM1 input clock TIM1CLK is set to APB1 clock (PCLK1),   
-   since APB1 pre-scaler is equal to 1.                                     
-      TIM2CLK = PCLK1                                                       
-      PCLK2 = HCLK                                                          
-      => TIM1CLK = SystemCoreClock (216 MHz)                                 
-  */
-  LL_TIM_SetPrescaler(TIM2, (SystemCoreClock/10000) + (SystemCoreClock/10000) * 0.12);
-//  LL_TIM_SetPrescaler(TIM2, (800));
-  
-  /* Set the auto-reload value to have an initial update event frequency of 10 Hz */
-  InitialAutoreload = 1;
-//  InitialAutoreload = 4;
-  LL_TIM_SetAutoReload(TIM2, InitialAutoreload);
-  
-  /* Enable the update interrupt */
-  LL_TIM_EnableIT_UPDATE(TIM2);
-  
-  /* Configure the NVIC to handle TIM1 update interrupt */
-  NVIC_SetPriority(TIM2_IRQn, 0);
-  NVIC_EnableIRQ(TIM2_IRQn);
-  
-  /* Enable counter */
-  LL_TIM_EnableCounter(TIM2);
-  /* Force update generation */
-  
-  LL_TIM_GenerateEvent_UPDATE(TIM2);
-}
 
 /**
   * @brief  Main program
@@ -151,23 +95,13 @@ int main(void)
   
   /* Configure the MPU attributes as Write Through */
   MPU_Config();
-  /* Enable Cycle Counter for DVFS*/
-  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-  DWT->LAR = 0xC5ACCE55;  //Unlock register access
-  DWT->CYCCNT = 0;
-  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-
-#ifdef CACHE_EN
+  
   /* Disable the CPU Cache */
-  CPU_CACHE_Enable();
-#endif
+  //CPU_CACHE_Enable();
+
   /* Configure the system clock to 216 MHz */
   SystemClock_Config();
-  TaskPerf_TimerConfig() ;
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
-  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_8, LL_GPIO_MODE_OUTPUT);
-  
-  TEST_FUNC_TaskPerf_ClockRateSwitch(80);
+  System_SuperviosrInit();
   
   /* Add your application code here */  
   xTaskCreate( SysTask_1,
@@ -176,198 +110,51 @@ int main(void)
                NULL,
                tskIDLE_PRIORITY + 3,
                &SysTask1_Handler);
-  xTaskCreate( SysTask_2,
-               "System Task 2",
-               configMINIMAL_STACK_SIZE * 2,
-               NULL,
-               tskIDLE_PRIORITY + 3,
-               &SysTask1_Handler);
-  xTaskCreate( SysTask_3,
-               "System Task 3",
-               configMINIMAL_STACK_SIZE * 2,
-               NULL,
-               tskIDLE_PRIORITY + 3,
-               &SysTask1_Handler);
-  xTaskCreate( SysTask_4,
-               "System Task 4",
-               configMINIMAL_STACK_SIZE * 2,
-               NULL,
-               tskIDLE_PRIORITY + 3,
-               &SysTask1_Handler);
-  
   /* Start scheduler */
-  //vTaskStartScheduler();
-    
+  vTaskStartScheduler();
   /* Infinite loop */
-  while (1);
+  while (1)
+  {
+
+  }
 }
 
-
+float exe = 0;
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
   uint32_t timer = 0;
-  
+
   for(;;) 
-  {  
-    currTask = 1;
-    TEST_FUNC_TaskPerf_ClockRateSwitch(T1_F);
+  {
+    TaskPerf_ClockRateSwitch(T1_F);
+    System_ResetCounter();
+    System_SetTaskDeadline(T1_DL);
     
-    LL_TIM_SetPrescaler(TIM2, __LL_TIM_CALC_PSC(SystemCoreClock, 10000));
-  
-    /* Set the auto-reload value to have an initial update event frequency of 10 Hz */
-    InitialAutoreload = __LL_TIM_CALC_ARR(SystemCoreClock, LL_TIM_GetPrescaler(TIM2), T1_DL);
-    LL_TIM_SetAutoReload(TIM2, InitialAutoreload);
-    
-    LL_TIM_EnableCounter(TIM2);
-   
-    //On-chip workload
-    isLowest_ClockRate = 0;
-    timer = 4000000;
+    timer = 4500000;
     while(timer--);
     timer = 0;
     
     /** FINISH **/
-    isDoneProc = 1;
+    //exe = ((float)1/(SystemCoreClock/1000) * System_GetCounter());
+    exe = System_GetTaskEXETime();
     vTaskDelay(100);
   }
 
 }
-void SysTask_2(void* parameter) 
-{
-  (void) parameter;
-  uint32_t timer = 0;
-  
-  for(;;) 
-  { 
-    currTask = 2;
-    TEST_FUNC_TaskPerf_ClockRateSwitch(T2_F);
-    
-    LL_TIM_SetPrescaler(TIM2, __LL_TIM_CALC_PSC(SystemCoreClock, 10000));
-  
-    /* Set the auto-reload value to have an initial update event frequency of 10 Hz */
-    InitialAutoreload = __LL_TIM_CALC_ARR(SystemCoreClock, LL_TIM_GetPrescaler(TIM2), T2_DL);
-    LL_TIM_SetAutoReload(TIM2, InitialAutoreload);
-    
-    LL_TIM_EnableCounter(TIM2);
-    
-    //On-chip workload
-    isLowest_ClockRate = 0;
-    timer = 400000;
-    while(timer--);
-    timer = 0;
-    
-    /** FINISH **/
-    isDoneProc = 1;
-    vTaskDelay(100);
-  }
 
-}
-void SysTask_3(void* parameter) 
-{
-  (void) parameter;
-  uint32_t timer = 0;
-  
-  for(;;) 
-  {   
-    currTask = 3;
-    TEST_FUNC_TaskPerf_ClockRateSwitch(T3_F);
-    
-    LL_TIM_SetPrescaler(TIM2, __LL_TIM_CALC_PSC(SystemCoreClock, 10000));
-  
-    /* Set the auto-reload value to have an initial update event frequency of 10 Hz */
-    InitialAutoreload = __LL_TIM_CALC_ARR(SystemCoreClock, LL_TIM_GetPrescaler(TIM2), T3_DL);
-    LL_TIM_SetAutoReload(TIM2, InitialAutoreload);
-    
-    LL_TIM_EnableCounter(TIM2);
-    
-    //On-chip workload
-    isLowest_ClockRate = 0;
-    timer = 400000;
-    while(timer--);
-    timer = 0;\
-    
-    /** FINISH **/
-    isDoneProc = 1;
-    vTaskDelay(100);
-  }
-
-}
-void SysTask_4(void* parameter) 
-{
-  (void) parameter;
-  uint32_t timer = 0;
-  
-  for(;;) 
-  {   
-    currTask = 4;
-    TEST_FUNC_TaskPerf_ClockRateSwitch(T4_F);
-    
-    LL_TIM_SetPrescaler(TIM2, __LL_TIM_CALC_PSC(SystemCoreClock, 10000));
-  
-    /* Set the auto-reload value to have an initial update event frequency of 10 Hz */
-    InitialAutoreload = __LL_TIM_CALC_ARR(SystemCoreClock, LL_TIM_GetPrescaler(TIM2), T4_DL);
-    LL_TIM_SetAutoReload(TIM2, InitialAutoreload);
-    
-    LL_TIM_EnableCounter(TIM2);
-    
-    //On-chip workload
-    isLowest_ClockRate = 0;
-    timer = 400000;
-    while(timer--);
-    timer = 0;
-    
-    /** FINISH **/
-    isDoneProc = 1;
-    vTaskDelay(100);
-  }
-
-}
 void vApplicationIdleHook(void) 
 {      
-  if(TaskPerf_isOnStandby()) 
-  {
-    /* Standby Operation */
-    /* Disable Overdrive Switching */
-    PWR->CR1 &= ~(3 << 16);
-    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
-    
-    while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE);
-    
-    SysTick_Config((8 * 1000000) / 1000);
-    SystemCoreClock = 8 * 1000000;
-  }
 }
-               
+
+/* Callback ISR */
 void Task_DeadlineSupervisor()
 {
-    
-//    LL_TIM_DisableCounter(TIM2);
-//    if(!isDoneProc)
-//    {
-//      switch(currTask)
-//      {
-//        case 1:
-//          taskDLCounter[0] += 1;
-//          break;
-//        
-//        case 2:
-//          taskDLCounter[1] += 1;
-//          break;
-//      
-//        case 3:
-//          taskDLCounter[2] += 1;
-//          break;
-//      
-//        case 4:
-//          taskDLCounter[3] += 1;
-//          break;
-//      }
-//    }
-//    
-//    isDoneProc = 0;
-    LL_GPIO_TogglePin(GPIOB, LL_GPIO_PIN_8);
+   LL_TIM_ClearFlag_UPDATE(TIM2);
+   LL_TIM_SetCounter(TIM2, 0);
+   LL_GPIO_TogglePin(GPIOB, LL_GPIO_PIN_8);
 }
+
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */
 /**

@@ -24,18 +24,7 @@ typedef struct PLLParamerter_Type
   uint32_t pll_p;
 }PLLParamCon_TypeDef;
 
-typedef struct TaskPreference_Type
-{
-  TaskHandle_t Task_Instance;
-  PLLParamCon_TypeDef Task_OptFreq;
-  float Task_OnChipWL;
-  float Task_OffChipWL; 
-  uint16_t Task_Deadline;
-}TaskPerfConf_t;
-
-void TaskPerf_ClockRateSwitch(TaskPerfConf_t*, uint16_t);
-void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t);
-void TaskPerf_Evauate(TaskPerfConf_t*);\
-uint8_t TaskPerf_isOnStandby() ;
+void TaskPerf_ClockRateSwitch(uint16_t);
+uint8_t TaskPerf_isOnStandby();
 
 #endif

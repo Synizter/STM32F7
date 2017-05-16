@@ -136,7 +136,7 @@ const PLLParamCon_TypeDef ClockRateScale_High[] = {
 };
 const PLLParamCon_TypeDef ClockRateScale_Medium = {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_4, 168, LL_RCC_PLLP_DIV_2};
 
-void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f) 
+void TaskPerf_ClockRateSwitch(uint16_t target_f) 
 {
   /* Re-route clock source to HSE */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
@@ -157,6 +157,7 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
     /* Copy map pll configuration to ClkConfig var */
     ClkConfig = ClockRateScale_Low[target_f - LOWER_BND_LOW_CLK_RATE];
   }
+  
   /*Medium Range Frequency ----------------------------------------------------*/
   else if (target_f == MID_CLK_RATE)
   {
@@ -169,6 +170,7 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
     LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE2);
     ClkConfig = ClockRateScale_Medium;
   }
+  
   /*High Range Frequency ------------------------------------------------------------*/
   else if (target_f >= LOWER_BND_HIGH_CLK_RATE && target_f <= UPPER_BND_HIGH_CLK_RATE)
   {
@@ -184,24 +186,22 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
     /* Copy map pll configuration to ClkConfig var */
     ClkConfig = ClockRateScale_High[target_f - LOWER_BND_HIGH_CLK_RATE];
   }
+  
   /* Insanity case, trap in inf loop */
   else 
   {
+    /*Standby at 8MHz*/
     if(target_f == 8) 
     {
       StandbyState = 1;
-      //LL_PWR_DisableOverDriveMode();
-      PWR->CR1 &= ~(1 << 16);
-      /* Disable Overdrice Switching */
-      //LL_PWR_DisableOverDriveSwitching();
-      PWR->CR1 &= ~(1 << 17);
+      PWR->CR1 &= ~(3 << 16);
       
       SysTick_Config((target_f * 1000000) / 1000);
       LL_SetSystemCoreClock(target_f * 1000000);
       
-
       return;
     }
+    /*Anormaly clock rate*/
     else 
     {
       while(1);
@@ -222,7 +222,7 @@ void TEST_FUNC_TaskPerf_ClockRateSwitch(uint16_t target_f)
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) ;
 
-  
+  /* Update SystemCoreClock*/
   SysTick_Config((target_f * 1000000) / 1000);
   LL_SetSystemCoreClock(target_f * 1000000);
 }

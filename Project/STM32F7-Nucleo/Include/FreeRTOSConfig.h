@@ -131,6 +131,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay             1
 #define INCLUDE_xTaskGetSchedulerState 1
 
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 1
+
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
  /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
@@ -168,6 +170,10 @@ header file. */
 /* IMPORTANT: This define MUST be commented when used with STM32Cube firmware, 
               to prevent overwriting SysTick_Handler defined within STM32Cube HAL */
 /* #define xPortSysTickHandler SysTick_Handler */
+extern void TRACE_DeadlineSupervisor();
+
+#define traceTASK_SWITCHED_IN     TRACE_DeadlineSupervisor
+#define traceTASK_SWITCHED_OUT    TRACE_DeadlineSupervisor
 
 #endif /* FREERTOS_CONFIG_H */
 

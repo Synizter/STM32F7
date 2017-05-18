@@ -47,7 +47,7 @@
 //#include "lwip/inet.h"
 //#include "lwip/sockets.h"
 
-#include "perf_config.h"
+
 /** @addtogroup STM32F7xx_LL_Examples
   * @{
   */
@@ -58,14 +58,18 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define T1_F            168
-#define T1_DL           20
+#define T1_F            60
+#define T1_DL           50
+    
+#define T2_F            216
+#define T2_DL           30
 
     
     
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/ 
-System_TaskSupervisor SystemTask_Instance;
+System_TaskSupervisor SystemTask1_Instance;
+System_TaskSupervisor SystemTask2_Instance;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -73,6 +77,7 @@ static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
+static void SysTask_2(void* parameter);
 void vApplicationIdleHook( void );
 
 
@@ -94,10 +99,10 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
                uxPriority,
                pvValueCreatedTask->task_tcb);
   
-  /* Set parameter field for task supervisor */
+  /* Set parameter field for task supervisor  YOU may add your own field by modifying @System_TaskSupervisor struct*/
   pvValueCreatedTask->task_deadline = xTaskDL;
-    
-    
+  
+  /* Attach params to task stack */
   vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
   return xReturn;
 }
@@ -132,8 +137,16 @@ int main(void)
                     configMINIMAL_STACK_SIZE * 2, 
                     NULL, 
                     tskIDLE_PRIORITY + 1,
-                    &SystemTask_Instance,
+                    &SystemTask1_Instance,
                     T1_DL);
+   
+  System_TaskCreate(SysTask_2, 
+                    "System Task 2", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 2,
+                    &SystemTask2_Instance,
+                    T2_DL);
 
   
   /* Start scheduler */
@@ -145,29 +158,40 @@ int main(void)
   }
 }
 
-float exe = 0;
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
   uint32_t timer = 0;
 
   for(;;) 
-  {
+  { 
+    System_SetTaskOpClockRate(&SystemTask1_Instance, T1_F);
+    System_StartCounter(&SystemTask1_Instance);
     
-    TaskPerf_ClockRateSwitch(T1_F);
-    System_StartCounter(&SystemTask_Instance);
-    
-//    timer = 4000;
-//    while(timer--);
-//    timer = 0;
-    vTaskDelay(1000);
-    
-    /** FINISH **/
-    exe = System_GetTaskEXETime(&SystemTask_Instance);
+    timer = 4000;
+    while(timer--);
+    timer = 0;
     
     vTaskDelay(10);
   }
+}
 
+void SysTask_2(void* parameter) 
+{
+  (void) parameter;
+  uint32_t timer = 0;
+
+  for(;;) 
+  { 
+    System_SetTaskOpClockRate(&SystemTask2_Instance, T2_F);
+    System_StartCounter(&SystemTask2_Instance);
+    
+    timer = 4000;
+    while(timer--);
+    timer = 0;
+    
+    vTaskDelay(10);
+  }
 }
 
 void vApplicationIdleHook(void) 

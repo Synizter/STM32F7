@@ -1,16 +1,12 @@
 /* Private include -----------------------------------------------------------*/
 #include "task_supervisor.h"
+#include "perf_config.h"
 
 /* Private functions ---------------------------------------------------------*/
-uint16_t SYS_TASK_DEADLINE = 0;
-uint32_t START_CNT = 0;
-uint32_t STOP_CNT = 0;
-
-
 
 void System_SetTaskDeadline(System_TaskSupervisor* instance, uint16_t dl_time)
 {
-  SYS_TASK_DEADLINE = dl_time;
+  instance->task_deadline = dl_time;
   DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
@@ -29,12 +25,13 @@ void System_StartCounter(System_TaskSupervisor* instance)
   instance->task_timestamp = System_GetCounter();
 }
 
-void System_StopCounter()
-{
-  STOP_CNT = System_GetCounter();
-}
-  
 uint32_t System_GetElapseTime(System_TaskSupervisor* instance)
 {
   return System_GetCounter() - instance->task_timestamp;
 }
+
+void System_SetTaskOpClockRate(System_TaskSupervisor* instance, uint16_t cr)
+{
+  instance->task_opf = cr;
+  TaskPerf_ClockRateSwitch(instance->task_opf);
+}  

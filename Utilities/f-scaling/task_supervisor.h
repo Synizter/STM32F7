@@ -14,7 +14,7 @@ typedef struct
 {
   
   uint32_t task_timestamp;
-  
+  uint16_t task_opf;
   uint16_t task_deadline;
   
   TaskHandle_t task_tcb;
@@ -22,12 +22,11 @@ typedef struct
 }System_TaskSupervisor;
 
 /* Prototpye ------------------------------------------------------------------*/
-uint16_t System_GetTaskDeadline();
-void System_SetTaskDeadline(System_TaskSupervisor* instance, uint16_t dl_time);
-float System_GetTaskEXETime();
+void System_SetTaskDeadline(System_TaskSupervisor*, uint16_t);
+float System_GetTaskEXETime(System_TaskSupervisor*);
 void System_StartCounter(System_TaskSupervisor*);
-void System_StopCounter();
-uint32_t System_GetElapseTime();
+uint32_t System_GetElapseTime(System_TaskSupervisor*);
+void System_SetTaskOpClockRate(System_TaskSupervisor*, uint16_t);
 
 /* Inline Function ------------------------------------------------------------*/
 __STATIC_INLINE void System_SuperviosrInit() 
@@ -41,13 +40,6 @@ __STATIC_INLINE void System_SuperviosrInit()
 __STATIC_INLINE uint32_t System_GetCounter()
 {
   return DWT->CYCCNT;
-}
-
-__STATIC_INLINE void System_ResetCounter()
-{
-  /*Disable Counter*/
-  DWT->CTRL &= ~(1 << 0);
-  DWT->CYCCNT = 0;
 }
 
 __STATIC_INLINE uint8_t System_isCounterENA()

@@ -168,19 +168,32 @@ void SysTick_Handler(void)
 }
   
 /* ISR callback for task */
-TaskHandle_t local_instance;
-System_TaskSupervisor* task_param_instance;
-
+  TaskHandle_t local_instance;
+  System_TaskSupervisor* task_param_instance;
+  float exe;
 uint8_t TRACE_DeadlineSupervisor()
 {
+
   
+  /* Local TaskHandle_t and System_TaskSupervisor for retreiving switched off task information
+     Swtiched off task's deadline whelter task executed in time bound*/
   local_instance = xTaskGetCurrentTaskHandle();
-  
   task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(local_instance, 0);
   
-  if(System_GetCounter() - task_param_instance->task_timestamp >= task_param_instance->task_deadline)
+  /* In case IDLE task is invoked, skip*/
+  if(task_param_instance != 0x0)
   {
-    return 1;
+      /* Calculate execution time compare to current task deadline */
+    if(System_GetTaskEXETime(task_param_instance) >= task_param_instance->task_deadline)
+    {
+      exe = System_GetTaskEXETime(task_param_instance);
+      return 1;
+    }
+    else
+    {
+      exe = System_GetTaskEXETime(task_param_instance);
+      return 0;
+    }
   }
   else
   {

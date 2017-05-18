@@ -19,14 +19,14 @@ uint16_t System_GetTaskDeadline(System_TaskSupervisor* instance)
   return instance->task_deadline;
 }
 
-float System_GetTaskEXETime()
+float System_GetTaskEXETime(System_TaskSupervisor* instance)
 {
-  return  ((float)1/(SystemCoreClock/1000) * System_GetElapseTime());
+  return  ((float)1/(SystemCoreClock/1000) * System_GetElapseTime(instance));
 }
 
-void System_StartCounter()
+void System_StartCounter(System_TaskSupervisor* instance)
 {
-  START_CNT = System_GetCounter();
+  instance->task_timestamp = System_GetCounter();
 }
 
 void System_StopCounter()
@@ -36,5 +36,5 @@ void System_StopCounter()
   
 uint32_t System_GetElapseTime(System_TaskSupervisor* instance)
 {
-  return (START_CNT >= STOP_CNT) ? (START_CNT - STOP_CNT) : (STOP_CNT - START_CNT);
+  return System_GetCounter() - instance->task_timestamp;
 }

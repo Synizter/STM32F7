@@ -14,7 +14,6 @@ typedef struct
 {
   
   uint32_t task_timestamp;
-  uint32_t task_current_tick;
   
   uint16_t task_deadline;
   
@@ -26,7 +25,7 @@ typedef struct
 uint16_t System_GetTaskDeadline();
 void System_SetTaskDeadline(System_TaskSupervisor* instance, uint16_t dl_time);
 float System_GetTaskEXETime();
-void System_StartCounter();
+void System_StartCounter(System_TaskSupervisor*);
 void System_StopCounter();
 uint32_t System_GetElapseTime();
 
@@ -39,7 +38,7 @@ __STATIC_INLINE void System_SuperviosrInit()
   DWT->CYCCNT = 0;
 }
 
-__STATIC_INLINE uint64_t System_GetCounter()
+__STATIC_INLINE uint32_t System_GetCounter()
 {
   return DWT->CYCCNT;
 }

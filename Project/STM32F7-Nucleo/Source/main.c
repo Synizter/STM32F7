@@ -98,7 +98,7 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
   pvValueCreatedTask->task_deadline = xTaskDL;
     
     
-  SetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (System_TaskSupervisor*)pvValueCreatedTask);
+  vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
   return xReturn;
 }
 
@@ -155,18 +155,17 @@ void SysTask_1(void* parameter)
   {
     
     TaskPerf_ClockRateSwitch(T1_F);
-    System_SetTaskDeadline(T1_DL);
-    System_StartCounter();
+    System_StartCounter(&SystemTask_Instance);
     
-    timer = 4500000;
-    while(timer--);
-    timer = 0;
+//    timer = 4000;
+//    while(timer--);
+//    timer = 0;
+    vTaskDelay(1000);
     
     /** FINISH **/
-    System_StopCounter();
-    exe = System_GetTaskEXETime();
+    exe = System_GetTaskEXETime(&SystemTask_Instance);
     
-    vTaskDelay(100);
+    vTaskDelay(10);
   }
 
 }

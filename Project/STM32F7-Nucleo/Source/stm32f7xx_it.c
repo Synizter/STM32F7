@@ -160,20 +160,32 @@ void DebugMon_Handler(void)
 void SysTick_Handler(void)
 {
   /*Task Deadline Supervisor unit*/
-  
+  if(TRACE_DeadlineSupervisor())
+  {
+    __NOP();
+  }
   xPortSysTickHandler();
 }
   
 /* ISR callback for task */
-void TRACE_DeadlineSupervisor()
+TaskHandle_t local_instance;
+System_TaskSupervisor* task_param_instance;
+
+uint8_t TRACE_DeadlineSupervisor()
 {
-  TaskHandle_t local_instance;
-  System_TaskSupervisor* task_param_instance;
   
   local_instance = xTaskGetCurrentTaskHandle();
   
-  task_param_instance = (System_TaskSupervisor*) GetThreadLocalStoragePointer(local_instance, 0);
-
+  task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(local_instance, 0);
+  
+  if(System_GetCounter() - task_param_instance->task_timestamp >= task_param_instance->task_deadline)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
   
 
 }

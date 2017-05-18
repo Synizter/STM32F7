@@ -170,7 +170,9 @@ header file. */
 /* IMPORTANT: This define MUST be commented when used with STM32Cube firmware, 
               to prevent overwriting SysTick_Handler defined within STM32Cube HAL */
 /* #define xPortSysTickHandler SysTick_Handler */
-extern void TRACE_DeadlineSupervisor();
+#if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
+ extern uint8_t TRACE_DeadlineSupervisor();
+#endif
 
 #define traceTASK_SWITCHED_IN     TRACE_DeadlineSupervisor
 #define traceTASK_SWITCHED_OUT    TRACE_DeadlineSupervisor

@@ -47,7 +47,7 @@
 //#include "lwip/inet.h"
 //#include "lwip/sockets.h"
 
-#include "perf_config.h"
+
 /** @addtogroup STM32F7xx_LL_Examples
   * @{
   */
@@ -58,14 +58,18 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define T1_F            80
-#define T1_DL           30
+#define T1_F            60
+#define T1_DL           50
+    
+#define T2_F            216
+#define T2_DL           30
 
     
     
 /* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-TaskHandle_t SysTask1_Handler; 
+/* Private variables ---------------------------------------------------------*/ 
+System_TaskSupervisor SystemTask1_Instance;
+System_TaskSupervisor SystemTask2_Instance;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -73,11 +77,35 @@ static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
+static void SysTask_2(void* parameter);
 void vApplicationIdleHook( void );
 
 
 /* Private functions ---------------------------------------------------------*/
-
+__STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst, 
+                                                        char * const pcName,
+							const uint16_t usStackDepth,
+							void * const pvParameters,
+							UBaseType_t uxPriority,
+                                                        System_TaskSupervisor * pvValueCreatedTask,
+                                                        uint16_t xTaskDL)
+{
+  BaseType_t xReturn;
+  
+    xReturn = xTaskCreate( pxTaskCodeconst,
+               pcName,
+               usStackDepth,
+               pvParameters,
+               uxPriority,
+               pvValueCreatedTask->task_tcb);
+  
+  /* Set parameter field for task supervisor  YOU may add your own field by modifying @System_TaskSupervisor struct*/
+  pvValueCreatedTask->task_deadline = xTaskDL;
+  
+  /* Attach params to task stack */
+  vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
+  return xReturn;
+}
 
 /**
   * @brief  Main program
@@ -104,12 +132,23 @@ int main(void)
   System_SuperviosrInit();
   
   /* Add your application code here */  
-  xTaskCreate( SysTask_1,
-               "System Task 1",
-               configMINIMAL_STACK_SIZE * 2,
-               NULL,
-               tskIDLE_PRIORITY + 3,
-               &SysTask1_Handler);
+  System_TaskCreate(SysTask_1, 
+                    "System Task 1", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 1,
+                    &SystemTask1_Instance,
+                    T1_DL);
+   
+  System_TaskCreate(SysTask_2, 
+                    "System Task 2", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 2,
+                    &SystemTask2_Instance,
+                    T2_DL);
+
+  
   /* Start scheduler */
   vTaskStartScheduler();
   /* Infinite loop */
@@ -119,42 +158,45 @@ int main(void)
   }
 }
 
-float exe = 0;
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
   uint32_t timer = 0;
 
   for(;;) 
-  {
-    TaskPerf_ClockRateSwitch(T1_F);
-    System_ResetCounter();
-    System_SetTaskDeadline(T1_DL);
+  { 
+    System_SetTaskOpClockRate(&SystemTask1_Instance, T1_F);
+    System_StartCounter(&SystemTask1_Instance);
     
-    timer = 4500000;
+    timer = 4000;
     while(timer--);
     timer = 0;
     
-    /** FINISH **/
-    //exe = ((float)1/(SystemCoreClock/1000) * System_GetCounter());
-    exe = System_GetTaskEXETime();
-    vTaskDelay(100);
+    vTaskDelay(10);
   }
+}
 
+void SysTask_2(void* parameter) 
+{
+  (void) parameter;
+  uint32_t timer = 0;
+
+  for(;;) 
+  { 
+    System_SetTaskOpClockRate(&SystemTask2_Instance, T2_F);
+    System_StartCounter(&SystemTask2_Instance);
+    
+    timer = 4000;
+    while(timer--);
+    timer = 0;
+    
+    vTaskDelay(10);
+  }
 }
 
 void vApplicationIdleHook(void) 
 {      
 }
-
-/* Callback ISR */
-void Task_DeadlineSupervisor()
-{
-   LL_TIM_ClearFlag_UPDATE(TIM2);
-   LL_TIM_SetCounter(TIM2, 0);
-   LL_GPIO_TogglePin(GPIOB, LL_GPIO_PIN_8);
-}
-
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */
 /**

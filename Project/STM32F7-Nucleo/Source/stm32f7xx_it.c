@@ -160,14 +160,48 @@ void DebugMon_Handler(void)
 void SysTick_Handler(void)
 {
   /*Task Deadline Supervisor unit*/
-  if(System_GetTaskDeadline() <=  System_GetTaskEXETime() && System_isCounterENA())
+  if(TRACE_DeadlineSupervisor())
   {
     __NOP();
   }
   xPortSysTickHandler();
 }
   
+/* ISR callback for task */
+  TaskHandle_t local_instance;
+  System_TaskSupervisor* task_param_instance;
+  float exe;
+uint8_t TRACE_DeadlineSupervisor()
+{
 
+  
+  /* Local TaskHandle_t and System_TaskSupervisor for retreiving switched off task information
+     Swtiched off task's deadline whelter task executed in time bound*/
+  local_instance = xTaskGetCurrentTaskHandle();
+  task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(local_instance, 0);
+  
+  /* In case IDLE task is invoked, skip*/
+  if(task_param_instance != 0x0)
+  {
+      /* Calculate execution time compare to current task deadline */
+    if(System_GetTaskEXETime(task_param_instance) >= task_param_instance->task_deadline)
+    {
+      exe = System_GetTaskEXETime(task_param_instance);
+      return 1;
+    }
+    else
+    {
+      exe = System_GetTaskEXETime(task_param_instance);
+      return 0;
+    }
+  }
+  else
+  {
+    return 0;
+  }
+  
+
+}
 /******************************************************************************/
 /*                 STM32F7xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

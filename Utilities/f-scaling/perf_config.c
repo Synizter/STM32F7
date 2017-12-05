@@ -2,6 +2,7 @@
 #include "stm32f7xx_ll_pwr.h"
 #include "stm32f7xx_ll_rcc.h"
 #include "stm32f7xx_ll_bus.h"
+#include "stm32f7xx_ll_utils.h"
 
 /* Private Prototype ******************************************************************/
 /* Private Variable *******************************************************************/

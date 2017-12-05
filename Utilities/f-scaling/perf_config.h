@@ -2,7 +2,6 @@
 #define __PERF_CONFIG_H__
 
 #include "stm32f7xx.h"
-#include "cmsis_os.h"
 
 #define LOWER_BND_LOW_CLK_RATE			60
 #define UPPER_BND_LOW_CLK_RATE			144

@@ -317,6 +317,7 @@ C:\Users\Goragod\Desktop\STM32F7\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_R
 -D__EDG_FLOAT128_ENABLING_POSSIBLE=0
 -DSTM32F765xx=1
 -DUSE_FULL_LL_DRIVER=1
+-DHSE_VALUE=8000000
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.0\\arm\\INC\\c\\DLib_Config_Normal.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.0\\arm\\INC\\c\\DLib_Config_Normal.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V8.20.1.14183/W32 for ARM"

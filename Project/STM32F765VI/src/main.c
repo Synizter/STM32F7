@@ -1,60 +1,15 @@
 /**
   ******************************************************************************
-  * @file    Templates_LL/Src/main.c 
-  * @author  MCD Application Team
+  * @file   main.c 
+  * @author  GORAGOD P
   * @version V1.0.0
   * @date    30-December-2016
   * @brief   Main program body through the LL API
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-
-//#include "stm32f7xx_eth_bsp.h"
-//#include "stm32f7xx_eth_netconf.h"
-//#include "lwip/opt.h"
-//#include "lwip/arch.h"
-//#include "lwip/api.h"
-//#include "lwip/inet.h"
-//#include "lwip/sockets.h"
-
-
-/** @addtogroup STM32F7xx_LL_Examples
-  * @{
-  */
-
-/** @addtogroup Templates_LL
-  * @{
-  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -103,10 +58,38 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
   pvValueCreatedTask->task_deadline = xTaskDL;
   
   /* Attach params to task stack */
-  vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
+    (pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
   return xReturn;
 }
 
+uint32_t OptimalFrequency(System_TaskSupervisor* pvTask)
+{
+  float sc;
+  /**Select switching Capacitance*/
+  switch(LL_PWR_GetRegulVoltageScaling())
+  {
+    case LL_PWR_REGU_VOLTAGE_SCALE3:
+      if(LL_PWR_IsEnabledOverDriveMode())
+        sc = 0.11982;
+      else
+        sc = 0.31349;
+    break;
+    
+    case LL_PWR_REGU_VOLTAGE_SCALE2:
+      sc = 0.32016l
+    break;
+    
+    case LL_PWR_REGU_VOLTAGE_SCALE1:
+      if (pvTask->task_opf == 16)
+        sc = 0.5614;
+      else
+        sc = 0.40277;
+    break;
+  }
+  
+  //calculate optinmal dfrequency
+  
+}
 /**
   * @brief  Main program
   * @param  None
@@ -240,11 +223,8 @@ void SystemClock_Config(void)
   {
   };
   
-  /* Enable HSE */
-   LL_RCC_HSE_Enable();
-   while(LL_RCC_HSE_IsReady()) 
-   {
-   };
+
+  
   
   /* Main PLL configuration and activation */
   LL_RCC_PLL_Enable();
@@ -252,7 +232,7 @@ void SystemClock_Config(void)
   {
   };
   
-  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 432, LL_RCC_PLLP_DIV_2);
+  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, LL_RCC_PLLM_DIV_8, 432, LL_RCC_PLLP_DIV_2);
 
   /* Sysclk activation on the main PLL */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);

@@ -1,6 +1,6 @@
 A DVFS Algorithm STM32F7 ARM Cortex-M7 MCU 
 ---
-### Discliamer
+### Disclaimer
 This project is my Thesis for TAIST Tokyo Tech International Program of Kasetsart University, Thailand. The project is under MIT license, you are allow to use my work for any research and development purpose but please cite this repository in your work otherwise violation of license will be enforced.
 
 ### Abstract
@@ -17,3 +17,12 @@ This technique employ a task-level frequency adjustment, in other word, every ta
 - [ ] Develop a optimal frequency calculation
 - [ ] Evaluate algorithm performance
 
+---------------------------------------------------------------------------------
+Goragod Pongthanisorn
+Co-lecturer, Master Student
+g.pongth@gmail.com
+goragod.p@ku.th
+goragod@tni.ac.th
+CAESAR LAB, 5th floor Chuchart Khamphoo Bulding, Kasetsart University, Thailand
+CERT Lab, 4th floor, C Building, Thai-Nichi Institute of Technology, Thailand
+---

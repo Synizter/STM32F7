@@ -18,11 +18,17 @@ This technique employ a task-level frequency adjustment, in other word, every ta
 - [ ] Evaluate algorithm performance
 
 ---------------------------------------------------------------------------------
-Goragod Pongthanisorn\n
+Goragod Pongthanisorn
+
 Co-lecturer, Master Student
+
 g.pongth@gmail.com
+
 goragod.p@ku.th
+
 goragod@tni.ac.th
 
+
 CAESAR LAB, 5th floor Chuchart Khamphoo Bulding, Kasetsart University, Thailand
+
 CERT Lab, 4th floor, C Building, Thai-Nichi Institute of Technology, Thailand

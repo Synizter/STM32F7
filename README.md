@@ -18,7 +18,7 @@ This technique employ a task-level frequency adjustment, in other word, every ta
 - [ ] Evaluate algorithm performance
 
 ---------------------------------------------------------------------------------
-Goragod Pongthanisorn
+Goragod Pongthanisorn\n
 Co-lecturer, Master Student
 g.pongth@gmail.com
 goragod.p@ku.th

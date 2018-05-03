@@ -87,7 +87,8 @@ uint32_t OptimalFrequency(System_TaskSupervisor* pvTask)
     break;
   }
   
-  //calculate optinmal dfrequency
+  /*calculate optinmal frequency*/
+  
   
 }
 /**

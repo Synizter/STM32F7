@@ -36,6 +36,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include <string.h>
 #include "main.h"
 #include "cmsis_os.h"
 
@@ -46,6 +47,9 @@
 //#include "lwip/api.h"
 //#include "lwip/inet.h"
 //#include "lwip/sockets.h"
+    
+#include "bb_sort.h"
+#include "md5.h"
 
 
 /** @addtogroup STM32F7xx_LL_Examples
@@ -58,11 +62,9 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define T1_F            60
+#define T1_F            216
 #define T1_DL           50
-    
-#define T2_F            216
-#define T2_DL           30
+   
 
     
     
@@ -70,14 +72,17 @@
 /* Private variables ---------------------------------------------------------*/ 
 System_TaskSupervisor SystemTask1_Instance;
 System_TaskSupervisor SystemTask2_Instance;
+uint8_t f = 60;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
+/* Private System Task*/
 static void SysTask_1(void* parameter);
-static void SysTask_2(void* parameter);
+
+/* System Callback*/
 void vApplicationIdleHook( void );
 
 
@@ -113,6 +118,9 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
   * @retval None
   */
 
+
+void Configure_EXTI();
+
 int main(void)
 {
   /* This project template calls firstly two functions in order to configure MPU feature 
@@ -140,59 +148,85 @@ int main(void)
                     &SystemTask1_Instance,
                     T1_DL);
    
-  System_TaskCreate(SysTask_2, 
-                    "System Task 2", 
-                    configMINIMAL_STACK_SIZE * 2, 
-                    NULL, 
-                    tskIDLE_PRIORITY + 2,
-                    &SystemTask2_Instance,
-                    T2_DL);
 
   
   /* Start scheduler */
-  vTaskStartScheduler();
+  //vTaskStartScheduler();
   /* Infinite loop */
+  Configure_EXTI();
+  
+  //EXTI 
   while (1)
   {
 
   }
 }
 
+void Configure_EXTI()
+{
+  LL_EXTI_InitTypeDef exti_initstruct;
+
+  /* -1- GPIO Config */
+  /* Enable GPIO Clock (to be able to program the configuration registers) */
+  USER_BUTTON_GPIO_CLK_ENABLE();
+  /* Configure IO */
+  LL_GPIO_SetPinMode(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, LL_GPIO_MODE_INPUT);
+  LL_GPIO_SetPinPull(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, LL_GPIO_PULL_NO); 
+
+  /* -2- Connect External Line to the GPIO*/
+  USER_BUTTON_SYSCFG_SET_EXTI();
+
+  /*-3- Enable a falling trigger EXTI line 13 Interrupt */
+  /* Set fields of initialization structure */
+  exti_initstruct.Line_0_31   = USER_BUTTON_EXTI_LINE;
+  exti_initstruct.LineCommand = ENABLE;
+  exti_initstruct.Mode        = LL_EXTI_MODE_IT;
+  exti_initstruct.Trigger     = LL_EXTI_TRIGGER_FALLING;
+
+  /* Initialize EXTI according to parameters defined in initialization structure. */
+  LL_EXTI_Init(&exti_initstruct);
+  
+  /*-4- Configure NVIC for EXTI15_10_IRQn */
+  NVIC_EnableIRQ(USER_BUTTON_EXTI_IRQn); 
+  NVIC_SetPriority(USER_BUTTON_EXTI_IRQn,0);
+}
+
+void UserButton_Callback(void)
+{
+  if(f >= 216)
+    f = 60;
+  else if(f >= 180)
+   f++;
+  else if(f == 168)
+    f = 180;
+  else if(f >= 144)
+    f = 168;
+  else
+    f++;
+
+  System_SetTaskOpClockRate(&SystemTask1_Instance, f); 
+}
+
+
+uint8_t out[20] = {0};
+
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
   uint32_t timer = 0;
-
+  
+  char* name = "Goragod";
+  
   for(;;) 
   { 
     System_SetTaskOpClockRate(&SystemTask1_Instance, T1_F);
     System_StartCounter(&SystemTask1_Instance);
-    
-    timer = 4000;
-    while(timer--);
-    timer = 0;
-    
-    vTaskDelay(10);
+    //MD5 Encodeing Test
+    md5_test(name, (uint8_t*)out);
+    vTaskDelay(100);
   }
 }
 
-void SysTask_2(void* parameter) 
-{
-  (void) parameter;
-  uint32_t timer = 0;
-
-  for(;;) 
-  { 
-    System_SetTaskOpClockRate(&SystemTask2_Instance, T2_F);
-    System_StartCounter(&SystemTask2_Instance);
-    
-    timer = 4000;
-    while(timer--);
-    timer = 0;
-    
-    vTaskDelay(10);
-  }
-}
 
 void vApplicationIdleHook(void) 
 {      

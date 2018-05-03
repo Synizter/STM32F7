@@ -168,9 +168,10 @@ void SysTick_Handler(void)
 }
   
 /* ISR callback for task */
-  TaskHandle_t local_instance;
-  System_TaskSupervisor* task_param_instance;
-  float exe;
+TaskHandle_t local_instance;
+System_TaskSupervisor* task_param_instance;
+float exe;
+
 uint8_t TRACE_DeadlineSupervisor()
 {
 
@@ -201,6 +202,23 @@ uint8_t TRACE_DeadlineSupervisor()
   }
   
 
+}
+
+/**
+  * @brief  This function handles external line 15_10 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void USER_BUTTON_IRQHANDLER(void)
+{
+  /* Manage Flags */
+  if(LL_EXTI_IsActiveFlag_0_31(USER_BUTTON_EXTI_LINE) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(USER_BUTTON_EXTI_LINE);
+
+    /* Manage code in main.c.*/
+    UserButton_Callback(); 
+  }
 }
 /******************************************************************************/
 /*                 STM32F7xx Peripherals Interrupt Handlers                   */

@@ -3,15 +3,10 @@
  *
  * Compile with: gcc -o md5 -O3 -lm md5.c
  */
-#include <stdio.h>
-#include <stdlib.h>
+#include "md5.h"
 #include <string.h>
-#include <stdint.h>
-#include <time.h>
- 
-// leftrotate function definition
-#define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
- 
+#include <stdlib.h>
+
 // These vars will contain the hash
 uint32_t h0, h1, h2, h3;
  
@@ -170,44 +165,49 @@ void md5(uint8_t *initial_msg, size_t initial_len) {
  
 }
  
-int main(int argc, char **argv) {
+void md5_test(uint8_t* argv, uint8_t* opt) {
  
-    if (argc < 2) {
-        printf("usage: %s 'string'\n", argv[0]);
-        return 1;
-    }
-    clock_t s,e;
  
-    char *msg = argv[1];
-    size_t len = strlen(msg);
+    size_t len = sizeof(argv);
  
-    // benchmark
-    // int i;
-    // for (i = 0; i < 1000000; i++) {
-    s = clock();
-        md5(msg, len);
-    // }
-        e = clock();
+    md5(argv, len);
  
     //var char digest[16] := h0 append h1 append h2 append h3 //(Output is in little-endian)
     uint8_t *p;
  
     // display result
- 
+    memset(opt, 0, sizeof(opt));
     p=(uint8_t *)&h0;
-    printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h0);
- 
+    //printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h0);
+    opt[0] = p[0];
+    opt[1] = p[1];
+    opt[2] = p[2];
+    opt[3] = p[3];
+    opt[4] = h0;
+     
     p=(uint8_t *)&h1;
-    printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h1);
- 
+   //printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h1);
+    opt[5] = p[0];
+    opt[6] = p[1];
+    opt[7] = p[2];
+    opt[8] = p[3];
+    opt[9] = h1;
+    
     p=(uint8_t *)&h2;
-    printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h2);
- 
+    //printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h2);
+    opt[10] = p[0];
+    opt[11] = p[1];
+    opt[12] = p[2];
+    opt[13] = p[3];
+    opt[14] = h2;
+    
     p=(uint8_t *)&h3;
-    printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h3);
-    puts("");
-
-    printf("\nElapse time is : %f\n", (double)(e-s)/CLOCKS_PER_SEC * 1000);
- 
-    return 0;
+    //printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], h3);
+    //puts("");
+    opt[15] = p[0];
+    opt[16] = p[1];
+    opt[17] = p[2];
+    opt[18] = p[3];
+    opt[19] = h3;
+    opt[20] = ' ';
 }

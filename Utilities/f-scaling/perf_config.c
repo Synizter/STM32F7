@@ -211,13 +211,15 @@ void TaskPerf_ClockRateSwitch(uint16_t target_f)
   
   StandbyState = 0;
   /* Main PLL configuration and activation */
-  LL_RCC_PLL_Enable();
-  while(LL_RCC_PLL_IsReady() != 1);
   
   LL_RCC_PLL_ConfigDomain_SYS(ClkConfig.clock_src, 
                               ClkConfig.pll_m, 
                               ClkConfig.pll_n, 
                               ClkConfig.pll_p);
+
+  LL_RCC_PLL_Enable();
+  while(LL_RCC_PLL_IsReady() != 1);
+
 
   /* Sysclk activation on the main PLL */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);

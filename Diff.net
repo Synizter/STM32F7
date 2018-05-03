@@ -1,0 +1,13 @@
+* C:\Users\Goragod\Desktop\Workspace\STM32F7\Diff.asc
+XU1 N003 N001 ref+ 0 Vout level.2 Avol=1Meg GBW=10Meg Slew=10Meg ilimit=25m rail=0 Vos=0 phimargin=45 en=0 enk=0 in=0 ink=0 Rin=500Meg
+R1 N001 N002 1k
+R2 N003 N004 1k
+R3 Vout N001 75k
+R4 N003 0 75k
+Vin N004 N002 0.1
+Rsense N002 N004 1
+V1 ref+ 0 3
+.tran 0 50ms 1ms 1ms
+.lib UniversalOpamps2.sub
+.backanno
+.end

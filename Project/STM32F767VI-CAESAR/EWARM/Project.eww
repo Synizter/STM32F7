@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\..\..\..\..\STM32F4\Project\STM32F446-Nucleo\EWARM\STM32F446-Nucleo.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>

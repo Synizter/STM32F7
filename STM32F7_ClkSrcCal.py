@@ -5,7 +5,6 @@
 		 for struct in c for PLL configuration.
 		 A result of generation will be save on
 		 'map.h' for further usage
-
 To start using this file, please declare an object 'processor_clk_gen'
 with your crystal speed (eq, processor_clk_gen(16) for HSI with 16MHz)
 '''
@@ -25,6 +24,7 @@ class processor_clk_gen:
 		self.__pll_m = [val for val in range(2, 64)]
 		self.__pll_n = [val for val in range(50, 433)]
 		self.__pll_p = [val for val in range(2, 10, 2)]
+
 	
 	def config_pll_output(self, target_freq):
 		clk_param = { 'PLL M' : 0,
@@ -64,23 +64,37 @@ class processor_clk_gen:
 					
 
 if __name__ == '__main__':
-	stm32f7_clk = processor_clk_gen(16) 
-	stm32f7_clk.pll_state('ENABLE')
 
 	#write constant function
-	map_file = open("map.h", "r+")
+	map_file = open("map.h", "wr+")
 	var_type = "PLLParam_TypeDef "
 	var_name = "ClockRateScale_Low[]"
-	clk_src = "LL_RCC_PLLSOURCE_HSI"
+	clk_src = "LL_RCC_PLLSOURCE_HSE"
 	div_pllm = "LL_RCC_PLLM_DIV_"
 	div_pllp = "LL_RCC_PLLP_DIV_"
+
+
 
 	#Create Array of Mid Frequency Range
 	arg_ = ""
 	map_file.write("const " + var_type + var_name + " = { \r\n")
 	
 	for i in range(60, 145):
+		stm32f7_clk = processor_clk_gen(25)
+		stm32f7_clk.pll_state('ENABLE')
 		pll_param = stm32f7_clk.config_pll_output(i * 1e6)
+		clk_src = "LL_RCC_PLLSOURCE_HSE"
+
+		if(pll_param == None):
+			stm32f7_clk = processor_clk_gen(16)
+			stm32f7_clk.pll_state('ENABLE')
+			pll_param = stm32f7_clk.config_pll_output(i * 1e6)
+			clk_src = "LL_RCC_PLLSOURCE_HSI"
+			
+
+		print "writing f parameter at : {}".format(i)
+		print pll_param
+
 		arg_ = ("{" + clk_src + ", " 
 			+ (div_pllm + str(pll_param['PLL M'])) + ", " 
 			+ str(pll_param['PLL N']) + ", " 
@@ -101,7 +115,20 @@ if __name__ == '__main__':
 	map_file.write("const " + var_type + var_name + " = { \r\n")
 	
 	for i in range(180, 217):
+		stm32f7_clk = processor_clk_gen(25)
+		stm32f7_clk.pll_state('ENABLE')
 		pll_param = stm32f7_clk.config_pll_output(i * 1e6)
+		clk_src = "LL_RCC_PLLSOURCE_HSE"
+
+		if(pll_param == None):
+			stm32f7_clk = processor_clk_gen(16)
+			stm32f7_clk.pll_state('ENABLE')
+			pll_param = stm32f7_clk.config_pll_output(i * 1e6)
+			clk_src = "LL_RCC_PLLSOURCE_HSI"
+			
+		print "writing f parameter at : {}".format(i)
+		print pll_param
+
 		arg_ = ("{" + clk_src + ", " 
 			+ (div_pllm + str(pll_param['PLL M'])) + ", " 
 			+ str(pll_param['PLL N']) + ", " 
@@ -128,10 +155,3 @@ if __name__ == '__main__':
 	map_file.write("};\r\n")	
 
 	map_file.close()
-
-
-
-
-
-
-	

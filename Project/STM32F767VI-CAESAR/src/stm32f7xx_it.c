@@ -166,6 +166,8 @@ void SysTick_Handler(void)
     __NOP();
   }
   xPortSysTickHandler();
+#else
+    __NOP();
 #endif
 }
   
@@ -292,3 +294,4 @@ void ADC_IRQHandler(void)
   * @}
   */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+

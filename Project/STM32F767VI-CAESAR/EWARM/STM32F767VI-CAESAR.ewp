@@ -221,7 +221,6 @@
                     <name>CCDefines</name>
                     <state>USE_FULL_LL_DRIVER</state>
                     <state>STM32F767xx</state>
-                    <state>USE_FULL_ASSERT</state>
                     <state>OS_SYS_INIT</state>
                 </option>
                 <option>
@@ -347,14 +346,14 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\inc</state>
+                    <state>$PROJ_DIR$\..\Inc</state>
                     <state>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc</state>
-                    <state>$PROJ_DIR$\..\..\..\Drivers\CMSIS\Include</state>
                     <state>$PROJ_DIR$\..\..\..\Drivers\CMSIS\Device\ST\STM32F7xx\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\Drivers\CMSIS\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS</state>
                     <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\include</state>
                     <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1</state>
                     <state>$PROJ_DIR$\..\..\..\Utilities\f-scaling</state>
-                    <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -616,7 +615,6 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\include</state>
                     <state>$PROJ_DIR$\..\inc</state>
                 </option>
                 <option>
@@ -770,7 +768,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>C:\Users\Goragod\Desktop\Workspace\STM32F7\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\iar\linker\stm32f767xx_flash.icf</state>
+                    <state>C:\Users\Goragod\Desktop\Workspace\STM32F7\Project\STM32F767VI-CAESAR\EWARM\stm32f767xx_flash.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1061,11 +1059,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state></state>
+                    <state>Full formatting, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state></state>
+                    <state>Full formatting, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -1073,7 +1071,7 @@
                 </option>
                 <option>
                     <name>OGCoreOrChip</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>GRuntimeLibSelect</name>
@@ -1087,7 +1085,7 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state></state>
+                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
@@ -1095,7 +1093,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>7.50.2.0</state>
+                    <state>8.20.2.14834</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1107,7 +1105,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state></state>
+                    <state>STM32F767VI	ST STM32F767VI</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -1141,12 +1139,12 @@
                 </option>
                 <option>
                     <name>RTConfigPath2</name>
-                    <state></state>
+                    <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
                     <version>26</version>
-                    <state>38</state>
+                    <state>41</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1163,21 +1161,21 @@
                 <option>
                     <name>CoreVariant</name>
                     <version>26</version>
-                    <state>38</state>
+                    <state>41</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state></state>
+                    <state>STM32F767VI	ST STM32F767VI</state>
                 </option>
                 <option>
                     <name>FPU2</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>7</state>
                 </option>
                 <option>
                     <name>NrRegs</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>NEON</name>
@@ -1186,7 +1184,7 @@
                 <option>
                     <name>GFPUCoreSlave2</name>
                     <version>26</version>
-                    <state>38</state>
+                    <state>41</state>
                 </option>
                 <option>
                     <name>OGCMSISPackSelectDevice</name>
@@ -1227,7 +1225,7 @@
                 </option>
                 <option>
                     <name>DSPExtension</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>TrustZone</name>
@@ -1248,7 +1246,8 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>NDEBUG</state>
+                    <state>USE_FULL_LL_DRIVER</state>
+                    <state>STM32F767xx</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1309,7 +1308,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>11111110</state>
+                    <state>00000000</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -1357,7 +1356,7 @@
                 </option>
                 <option>
                     <name>OutputFile</name>
-                    <state></state>
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>CCLibConfigHeader</name>
@@ -1373,7 +1372,14 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc</state>
+                    <state>$PROJ_DIR$\..\..\..\Drivers\CMSIS\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\Drivers\CMSIS\Device\ST\STM32F7xx\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS</state>
+                    <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\include</state>
+                    <state>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1</state>
+                    <state>C:\Users\Goragod\Desktop\Workspace\STM32F7\Utilities\f-scaling</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1389,7 +1395,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -1398,7 +1404,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -1619,7 +1625,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state></state>
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -1635,7 +1641,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1784,11 +1790,11 @@
                 </option>
                 <option>
                     <name>IlinkIcfOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state></state>
+                    <state>C:\Users\Goragod\Desktop\Workspace\STM32F7\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\iar\linker\stm32f767xx_flash.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1848,7 +1854,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>__iar_program_start</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -2059,86 +2065,120 @@
     </group>
     <group>
         <name>LL_Periph_Drivers</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_adc.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_dma.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_exti.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_gpio.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_i2c.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_pwr.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_rcc.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_tim.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_usart.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_utils.c</name>
-        </file>
+        <group>
+            <name>inc</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_bus.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_cortex.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_dma.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_gpio.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_pwr.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_rcc.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_system.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_utils.h</name>
+            </file>
+        </group>
+        <group>
+            <name>src</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_adc.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_dma.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_gpio.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_pwr.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_rcc.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_utils.c</name>
+            </file>
+        </group>
     </group>
     <group>
         <name>User</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\current_meas.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\src\main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\src\stm32f7xx_it.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\task_supervisor.c</name>
         </file>
     </group>
     <group>
         <name>Utilities</name>
         <group>
-            <name>FreeRTOS</name>
+            <name>Task Supervisor</name>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\croutine.c</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\current_meas.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\current_meas.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\fmap.c</name>
+                <excluded>
+                    <configuration>Debug</configuration>
+                    <configuration>Release</configuration>
+                </excluded>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\list.c</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1\port.c</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\perf_config.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1\portasm.s</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\task_supervisor.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\queue.c</name>
+                <name>$PROJ_DIR$\..\..\..\Utilities\f-scaling\task_supervisor.h</name>
             </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\timers.c</name>
-            </file>
+        </group>
+        <group>
+            <name>Third Party</name>
+            <group>
+                <name>FreeRTOS</name>
+                <group>
+                    <name>portable</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1\port.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1\portasm.s</name>
+                    </file>
+                </group>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\list.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</name>
+                </file>
+            </group>
         </group>
     </group>
 </project>

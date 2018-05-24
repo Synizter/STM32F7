@@ -13,11 +13,13 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define T1_F           60
-#define T1_DL           50
+#define T1_F              60
+#define T1_DL             50
 
 System_TaskSupervisor SystemTask1_Instance;
-
+//Debug Variable
+float service_exe_time[121] = {0};
+uint8_t i = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
@@ -62,7 +64,6 @@ int main(void)
 {
   /* Configure the MPU attributes as Write Through */
   MPU_Config();
-  
   /* Disable the CPU Cache */
   //CPU_CACHE_Enable();
 
@@ -70,6 +71,13 @@ int main(void)
   SystemClock_Config();
   MeasurementSystem_Init();
   System_SuperviosrInit();
+  
+   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+   DWT->LAR = 0xC5ACCE55; 
+   DWT->CYCCNT = 0;
+   DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+  
+  
   
   /* Add your application code here */  
   System_TaskCreate(SysTask_1, 
@@ -97,6 +105,8 @@ int main(void)
   }
 }
 /* System Task ----------------------------------------------------------------*/
+float elapse_time = 0;
+uint8_t clock_rate = 0;
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
@@ -104,19 +114,25 @@ void SysTask_1(void* parameter)
 
   for(;;) 
   { 
+    elapse_time = 0;
     //Start Conversion before execution
-    ADCStart_Meas();
-
-    LL_ADC_REG_StartConversionSWStart(ADC1);
+    //ADCStart_Meas();
+    //LL_ADC_REG_StartConversionSWStart(ADC1);
+    for(clock_rate = 60; clock_rate <= 216; ++clock_rate)
+    {
+      if((clock_rate >= 60 && clock_rate <= 144) || (clock_rate >= 180 && clock_rate <= 216) || (clock_rate == 168))
+      {
+        DWT->CYCCNT = 0;
+        System_StartCounter(&SystemTask1_Instance);
+        
+        System_SetTaskOpClockRate(&SystemTask1_Instance, clock_rate);
+        elapse_time = (1.0/SystemCoreClock)*DWT->CYCCNT;
+      
+        service_exe_time[i++] = elapse_time;
+      }
+    }
     
-    System_SetTaskOpClockRate(&SystemTask1_Instance, T1_F);
-    System_StartCounter(&SystemTask1_Instance);
-    
-    timer = 4000;
-    while(timer--);
-    timer = 0;
-    
-    vTaskDelay(10);
+      vTaskDelay(10);
     //Stop ADC and Read measurement
     //&SystemTask1_Instanfce
   }
@@ -129,7 +145,6 @@ void vApplicationIdleHook(void)
     __NOP();
   }
 }
-
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */
 /**
@@ -155,11 +170,13 @@ void vApplicationIdleHook(void)
   */
 void SystemClock_Config(void)
 {
-  /* Set FLASH latency */ 
+   
   LL_RCC_HSE_Enable();
-  while(LL_RCC_HSE_IsReady() != 1)
-  {
-  };
+  while(LL_RCC_HSE_IsReady() != 1);
+  LL_RCC_HSI_Enable();
+  while(LL_RCC_HSI_IsReady()!= 1);
+  
+  /* Set FLASH latency */
   LL_FLASH_SetLatency(LL_FLASH_LATENCY_7);
 
   /* Enable PWR clock */
@@ -199,7 +216,6 @@ void SystemClock_Config(void)
   
   /* Set systick to 1ms */
   SysTick_Config(216000000 / 1000);
-  
   /* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
   LL_SetSystemCoreClock(216000000);
 }

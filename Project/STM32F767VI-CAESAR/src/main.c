@@ -18,12 +18,14 @@
 
 System_TaskSupervisor SystemTask1_Instance;
 //Debug Variable
-float service_exe_time[121] = {0};
+float service_exe_time[130] = {0};
 uint8_t i = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-static void CPU_CACHE_Enable(void);
+
+//DO NOT TOUCH THIS SHIT
+//static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
 void vApplicationIdleHook( void );
@@ -50,7 +52,7 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
   pvValueCreatedTask->task_deadline = xTaskDL;
   
   /* Attach params to task stack */
-    (pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
+   vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
   return xReturn;
 }
 
@@ -71,13 +73,6 @@ int main(void)
   SystemClock_Config();
   MeasurementSystem_Init();
   System_SuperviosrInit();
-  
-   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-   DWT->LAR = 0xC5ACCE55; 
-   DWT->CYCCNT = 0;
-   DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-  
-  
   
   /* Add your application code here */  
   System_TaskCreate(SysTask_1, 
@@ -107,34 +102,30 @@ int main(void)
 /* System Task ----------------------------------------------------------------*/
 float elapse_time = 0;
 uint8_t clock_rate = 0;
+
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
-  uint32_t timer = 0;
+
 
   for(;;) 
   { 
-    elapse_time = 0;
-    //Start Conversion before execution
-    //ADCStart_Meas();
-    //LL_ADC_REG_StartConversionSWStart(ADC1);
-    for(clock_rate = 60; clock_rate <= 216; ++clock_rate)
-    {
-      if((clock_rate >= 60 && clock_rate <= 144) || (clock_rate >= 180 && clock_rate <= 216) || (clock_rate == 168))
-      {
-        DWT->CYCCNT = 0;
-        System_StartCounter(&SystemTask1_Instance);
-        
-        System_SetTaskOpClockRate(&SystemTask1_Instance, clock_rate);
-        elapse_time = (1.0/SystemCoreClock)*DWT->CYCCNT;
-      
-        service_exe_time[i++] = elapse_time;
-      }
-    }
+
+//    for(clock_rate = 60; clock_rate <= 216; ++clock_rate)
+//    {
+//      if((clock_rate >= 60 && clock_rate <= 144) || (clock_rate >= 180 && clock_rate <= 216) || (clock_rate == 168))
+//      {
+//        DWT->CYCCNT = 0;
+//        System_StartCounter(&SystemTask1_Instance);
+//        
+//        System_SetTaskOpClockRate(&SystemTask1_Instance, clock_rate);
+//        elapse_time = (1.0/SystemCoreClock)*DWT->CYCCNT;
+//      
+//        service_exe_time[i++] = elapse_time;
+//      }
+//    }
     
       vTaskDelay(10);
-    //Stop ADC and Read measurement
-    //&SystemTask1_Instanfce
   }
 }
                     
@@ -215,7 +206,7 @@ void SystemClock_Config(void)
   LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2);
   
   /* Set systick to 1ms */
-  SysTick_Config(216000000 / 1000);
+  //SysTick_Config(216000000 / 1000);
   /* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
   LL_SetSystemCoreClock(216000000);
 }
@@ -233,9 +224,9 @@ static void MPU_Config(void)
   LL_MPU_Disable();
 
   /* Configure the MPU attributes as WT for SRAM */
-  LL_MPU_ConfigRegion(LL_MPU_REGION_NUMBER0, 0x00, 0x20010000UL, 
+  LL_MPU_ConfigRegion(LL_MPU_REGION_NUMBER0, 0x00, 0x20020000UL, 
          LL_MPU_REGION_SIZE_256KB | LL_MPU_REGION_FULL_ACCESS | LL_MPU_ACCESS_NOT_BUFFERABLE |
-         LL_MPU_ACCESS_CACHEABLE | LL_MPU_ACCESS_SHAREABLE | LL_MPU_TEX_LEVEL0 |
+         LL_MPU_ACCESS_NOT_CACHEABLE | LL_MPU_ACCESS_SHAREABLE | LL_MPU_TEX_LEVEL0 |
          LL_MPU_INSTRUCTION_ACCESS_ENABLE);
 
   /* Enable MPU (any access not covered by any enabled region will cause a fault) */
@@ -247,14 +238,15 @@ static void MPU_Config(void)
   * @param  None
   * @retval None
   */
-static void CPU_CACHE_Enable(void)
-{
-  /* Enable I-Cache */
-  SCB_EnableICache();
-
-  /* Enable D-Cache */
-  SCB_EnableDCache();
-}
+//DO NOT TOUCH THIS SHIT
+//static void CPU_CACHE_Enable(void)
+//{
+//  /* Enable I-Cache */
+//  SCB_EnableICache();
+//
+//  /* Enable D-Cache */
+//  SCB_EnableDCache();
+//}
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE END      ============== */
 

@@ -34,9 +34,10 @@ void System_SetTaskOpClockRate(System_TaskSupervisor*, uint16_t);
 __STATIC_INLINE void System_SuperviosrInit() 
 {
   /* Enable Cycle Counter for DVFS*/
-  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-  DWT->LAR = 0xC5ACCE55;  //Unlock register access 
-  DWT->CYCCNT = 0;
+   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+   DWT->LAR = 0xC5ACCE55; 
+   DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+   DWT->CYCCNT = 0;
 }
 
 __STATIC_INLINE uint32_t System_GetCounter()

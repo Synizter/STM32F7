@@ -2,6 +2,7 @@
 #define __PERF_CONFIG_H__
 
 #include "stm32f7xx.h"
+#include "task_supervisor.h"
 
 #define LOWER_BND_LOW_CLK_RATE			60
 #define UPPER_BND_LOW_CLK_RATE			144
@@ -23,7 +24,9 @@ typedef struct PLLParamerter_Type
   uint32_t pll_p;
 }PLLParamCon_TypeDef;
 
-void TaskPerf_ClockRateSwitch(uint16_t);
+void ClockRateSwitch(uint16_t);
 uint8_t TaskPerf_isOnStandby();
+
+void Task_SetTaskOpClockRate(System_TaskSupervisor*);
 
 #endif

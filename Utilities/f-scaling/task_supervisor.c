@@ -15,9 +15,9 @@ uint16_t System_GetTaskDeadline(System_TaskSupervisor* instance)
   return instance->task_deadline;
 }
 
-float System_GetTaskEXETime(System_TaskSupervisor* instance)
+uint16_t System_GetTaskEXETime(System_TaskSupervisor* instance)
 {
-  return  ((float)1/(SystemCoreClock/1000) * System_GetElapseTime(instance));
+  return  ((float)1/(SystemCoreClock/1000) * System_GetElapseTime(instance)) * 1000;
 }
 
 void System_StartCounter(System_TaskSupervisor* instance)
@@ -30,8 +30,3 @@ uint32_t System_GetElapseTime(System_TaskSupervisor* instance)
   return System_GetCounter() - instance->task_timestamp;
 }
 
-void System_SetTaskOpClockRate(System_TaskSupervisor* instance, uint16_t cr)
-{
-  instance->task_opf = cr;
-  TaskPerf_ClockRateSwitch(instance->task_opf);
-}  

@@ -110,6 +110,7 @@
 #define configUSE_COUNTING_SEMAPHORES     1
 #define configGENERATE_RUN_TIME_STATS     0
 
+
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES           0
 #define configMAX_CO_ROUTINE_PRIORITIES (2)
@@ -171,7 +172,7 @@ header file. */
               to prevent overwriting SysTick_Handler defined within STM32Cube HAL */
 /* #define xPortSysTickHandler SysTick_Handler */
 #if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
- extern uint8_t TRACE_DeadlineSupervisor();
+ extern void TRACE_DeadlineSupervisor();
 #endif
 
 #define traceTASK_SWITCHED_IN     TRACE_DeadlineSupervisor

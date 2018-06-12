@@ -24,7 +24,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>2755603452</Checksum>
+        <Checksum>2150988319</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -136,12 +136,10 @@
         <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.0.1" 0 0 1 "" 0 "" 0</Bp0>
         <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c}.189.1" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\main.c}.0.1" 0 0 1 "" 0 "" 0</Bp2>
-        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.297.1" 0 0 1 "" 0 "" 0</Bp3>
+        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.283.1" 0 0 1 "" 0 "" 0</Bp3>
         <Bp4>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.81.3" 0 0 1 "" 0 "" 0</Bp4>
-        <Bp5>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\main.c}.128.7" 0 0 1 "" 0 "" 0</Bp5>
-        <Bp6>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.184.20" 0 0 1 "" 0 "" 0</Bp6>
-        <Bp7>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.191.5" 0 0 1 "" 0 "" 0</Bp7>
-        <Count>8</Count>
+        <Bp5>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\stm32f7xx_it.c}.185.5" 0 0 1 "" 0 "" 0</Bp5>
+        <Count>6</Count>
     </Breakpoints2>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>

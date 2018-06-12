@@ -138,7 +138,7 @@ const PLLParamCon_TypeDef ClockRateScale_High[] = {
 };
 const PLLParamCon_TypeDef ClockRateScale_Medium = {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 336, LL_RCC_PLLP_DIV_2};
 
-void TaskPerf_ClockRateSwitch(uint16_t target_f) 
+void ClockRateSwitch(uint16_t target_f) 
 {
   /* Re-route clock source to LSI */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
@@ -253,3 +253,8 @@ uint8_t TaskPerf_isOnStandby()
 {
   return StandbyState;
 }
+
+void Task_SetTaskOpClockRate(System_TaskSupervisor* instance)
+{
+  ClockRateSwitch(instance->task_opf);
+}  

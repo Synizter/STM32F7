@@ -14,12 +14,11 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define T1_F              60
-#define T1_DL             50
+#define T1_DL             2
 
 System_TaskSupervisor SystemTask1_Instance;
-//Debug Variable
-float service_exe_time[130] = {0};
-uint8_t i = 0;
+System_TaskSupervisor SystemTask2_Instance;
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
@@ -28,6 +27,7 @@ static void MPU_Config(void);
 //static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
+static void SysTask_2(void* parameter);
 void vApplicationIdleHook( void );
 
 /* Private functions ---------------------------------------------------------*/
@@ -37,7 +37,8 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
 							void * const pvParameters,
 							UBaseType_t uxPriority,
                                                         System_TaskSupervisor * pvValueCreatedTask,
-                                                        uint16_t xTaskDL)
+                                                        uint16_t xTaskDL,
+                                                        uint8_t xTaskCR)
 {
   BaseType_t xReturn;
   
@@ -50,6 +51,8 @@ __STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
   
   /* Set parameter field for task supervisor  YOU may add your own field by modifying @System_TaskSupervisor struct*/
   pvValueCreatedTask->task_deadline = xTaskDL;
+  pvValueCreatedTask->task_opf = xTaskCR;
+  pvValueCreatedTask->isDeadlineMiss = 0;
   
   /* Attach params to task stack */
    vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
@@ -67,7 +70,6 @@ int main(void)
   /* Configure the MPU attributes as Write Through */
   MPU_Config();
   /* Disable the CPU Cache */
-  //CPU_CACHE_Enable();
 
   /* Configure the system clock to 216 MHz */
   SystemClock_Config();
@@ -81,7 +83,16 @@ int main(void)
                     NULL, 
                     tskIDLE_PRIORITY + 1,
                     &SystemTask1_Instance,
-                    T1_DL);
+                    100,
+                    216);
+    System_TaskCreate(SysTask_2, 
+                    "System Task 2", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 1,
+                    &SystemTask2_Instance,
+                    100,
+                    200);
   
   
   /* Start scheduler */
@@ -107,25 +118,31 @@ void SysTask_1(void* parameter)
 {
   (void) parameter;
 
+  for(;;) 
+  {    
+    DWT->CYCCNT = 0;
+    //GetOperate Frequency and Set
+    if(SystemTask1_Instance.isDeadlineMiss == 1)
+    {
+      Task_SetTaskOpClockRate(&SystemTask1_Instance, SystemTask1_Instance.task_opf);
+    }
+     vTaskDelay(10);
+  }
+}
+
+void SysTask_2(void* parameter) 
+{
+  (void) parameter;
 
   for(;;) 
-  { 
-
-//    for(clock_rate = 60; clock_rate <= 216; ++clock_rate)
-//    {
-//      if((clock_rate >= 60 && clock_rate <= 144) || (clock_rate >= 180 && clock_rate <= 216) || (clock_rate == 168))
-//      {
-//        DWT->CYCCNT = 0;
-//        System_StartCounter(&SystemTask1_Instance);
-//        
-//        System_SetTaskOpClockRate(&SystemTask1_Instance, clock_rate);
-//        elapse_time = (1.0/SystemCoreClock)*DWT->CYCCNT;
-//      
-//        service_exe_time[i++] = elapse_time;
-//      }
-//    }
-    
-      vTaskDelay(10);
+  {    
+    DWT->CYCCNT = 0;
+    //GetOperate Frequency and Set
+    if(SystemTask2_Instance.isDeadlineMiss == 1)
+    {
+      Task_SetTaskOpClockRate(&SystemTask1_Instance, SystemTask1_Instance.task_opf);
+    }
+     vTaskDelay(100);
   }
 }
                     
@@ -133,8 +150,14 @@ void vApplicationIdleHook(void)
 {      
   while(1)
   {
+    DWT->CYCCNT = 0;
     __NOP();
   }
+}
+
+void vApplicationTickHook(void)
+{
+  
 }
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */

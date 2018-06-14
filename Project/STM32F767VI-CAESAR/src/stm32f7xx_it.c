@@ -170,25 +170,22 @@ uint16_t exe;
   
 void TRACE_DeadlineSupervisor()
 {
-  TaskHandle_t local_instance;
-  System_TaskSupervisor* task_param_instance;
+  System_TaskSupervisor* task_param_instance = {0};
   
-  /* Local TaskHandle_t and System_TaskSupervisor for retreiving switched off task information
+  /* local System_TaskSupervisor for retreiving switched off task information
      Swtiched off task's deadline whelter task executed in time bound*/
-  local_instance = xTaskGetCurrentTaskHandle();
-  task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(local_instance, 0);
+  task_param_instance->task_tcb = xTaskGetCurrentTaskHandle();
+  task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(task_param_instance->task_tcb, 0);
   
   /* In case IDLE task is invoked, skip*/
   if(task_param_instance != 0x0)
   {
+     
       /* Calculate execution time compare to current task deadline */
-    if((System_GetTaskEXETime(task_param_instance)) >= task_param_instance->task_deadline) //Deadline Miss Case
+    if((System_GetTaskEXETime(task_param_instance)) >= (task_param_instance->task_deadline))
     {
+      exe = System_GetTaskEXETime(task_param_instance);
       task_param_instance->isDeadlineMiss = 1;
-    }
-    else
-    {
-      task_param_instance->isDeadlineMiss = 0;
     }
   }
 }

@@ -23,7 +23,6 @@ typedef struct
 }System_TaskSupervisor;
 
 /* Prototpye ------------------------------------------------------------------*/
-void System_SetTaskDeadline(System_TaskSupervisor*, uint16_t);
 uint16_t System_GetTaskEXETime(System_TaskSupervisor*);
 void System_StartCounter(System_TaskSupervisor*);
 uint32_t System_GetElapseTime(System_TaskSupervisor*);

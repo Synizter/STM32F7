@@ -211,7 +211,7 @@ void ClockRateSwitch(uint16_t target_f)
     /*Anormaly clock rate*/
     else 
     {
-      while(1);
+      __NOP();
     }
   }
   /*Re-configure FLASH LATENCY (in case of 2.7-3.3V supply)*/
@@ -256,5 +256,17 @@ uint8_t TaskPerf_isOnStandby()
 
 void Task_SetTaskOpClockRate(System_TaskSupervisor* instance)
 {
+  if(instance->task_opf > 144 && instance->task_opf < 168)
+  {
+    instance->task_opf = 168;
+  }
+  else if(instance->task_opf > 168 && instance->task_opf < 180)
+  {
+    instance->task_opf = 180;
+  }
+  else if(instance->task_opf > 216)
+  {
+    instance->task_opf = 216;
+  }
   ClockRateSwitch(instance->task_opf);
 }  

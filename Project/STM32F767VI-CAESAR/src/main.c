@@ -9,12 +9,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "FreeRTOS.h"
 #include "cmsis_os.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define T1_F              60
 #define T1_DL             2
+
+TaskHandle_t pxPrevTCB;
 
 System_TaskSupervisor SystemTask1_Instance;
 System_TaskSupervisor SystemTask2_Instance;
@@ -84,7 +87,7 @@ int main(void)
                     tskIDLE_PRIORITY + 1,
                     &SystemTask1_Instance,
                     100,
-                    216);
+                    60);
     System_TaskCreate(SysTask_2, 
                     "System Task 2", 
                     configMINIMAL_STACK_SIZE * 2, 
@@ -111,22 +114,18 @@ int main(void)
   }
 }
 /* System Task ----------------------------------------------------------------*/
-float elapse_time = 0;
-uint8_t clock_rate = 0;
+uint32_t s;
 
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
-
+  //Task_SetTaskOpClockRate(&SystemTask1_Instance, SystemTask1_Instance.task_opf);
   for(;;) 
-  {    
-    DWT->CYCCNT = 0;
-    //GetOperate Frequency and Set
-    if(SystemTask1_Instance.isDeadlineMiss == 1)
-    {
-      Task_SetTaskOpClockRate(&SystemTask1_Instance, SystemTask1_Instance.task_opf);
-    }
+  {  
+    while(s--);
+    s = 0x0FFFFFF;
      vTaskDelay(10);
+
   }
 }
 
@@ -136,12 +135,6 @@ void SysTask_2(void* parameter)
 
   for(;;) 
   {    
-    DWT->CYCCNT = 0;
-    //GetOperate Frequency and Set
-    if(SystemTask2_Instance.isDeadlineMiss == 1)
-    {
-      Task_SetTaskOpClockRate(&SystemTask1_Instance, SystemTask1_Instance.task_opf);
-    }
      vTaskDelay(100);
   }
 }
@@ -150,7 +143,6 @@ void vApplicationIdleHook(void)
 {      
   while(1)
   {
-    DWT->CYCCNT = 0;
     __NOP();
   }
 }

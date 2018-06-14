@@ -2437,6 +2437,9 @@
         <file>
             <name>$PROJ_DIR$\..\src\stm32f7xx_it.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sys_macro.c</name>
+        </file>
     </group>
     <group>
         <name>Utilities</name>

@@ -86,7 +86,7 @@
 /* Ensure stdint is only used by the compiler, and not the assembler. */
 #if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
  #include <stdint.h>
- extern uint32_t SystemCoreClock;
+  extern uint32_t SystemCoreClock;
 #endif
 
 #define configUSE_PREEMPTION              1
@@ -173,10 +173,12 @@ header file. */
 /* #define xPortSysTickHandler SysTick_Handler */
 #if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
  extern void TRACE_DeadlineSupervisor();
+ extern void CONTEXT_SWITCH_IN();
+ extern void CONTEXT_SWITCH_OUT();
 #endif
 
-#define traceTASK_SWITCHED_IN     TRACE_DeadlineSupervisor
-#define traceTASK_SWITCHED_OUT    TRACE_DeadlineSupervisor
-
+#define traceTASK_SWITCHED_OUT  CONTEXT_SWITCH_OUT
+#define traceTASK_SWITCHED_IN   CONTEXT_SWITCH_IN
+ 
 #endif /* FREERTOS_CONFIG_H */
 

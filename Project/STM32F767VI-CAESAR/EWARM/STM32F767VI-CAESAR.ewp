@@ -615,7 +615,10 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\inc</state>
+                    <state>$PROJ_DIR$\..\Inc
+
+
+</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -2121,6 +2124,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\stm32f7xx_it.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sys_macro.c</name>
         </file>
     </group>
     <group>

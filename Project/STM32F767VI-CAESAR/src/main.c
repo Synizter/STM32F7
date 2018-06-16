@@ -14,13 +14,9 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define T1_F              60
-#define T1_DL             2
 
 TaskHandle_t pxPrevTCB;
-
 System_TaskSupervisor SystemTask1_Instance;
-System_TaskSupervisor SystemTask2_Instance;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -30,7 +26,6 @@ static void MPU_Config(void);
 //static void CPU_CACHE_Enable(void);
 
 static void SysTask_1(void* parameter);
-static void SysTask_2(void* parameter);
 void vApplicationIdleHook( void );
 
 /* Private functions ---------------------------------------------------------*/
@@ -86,16 +81,8 @@ int main(void)
                     NULL, 
                     tskIDLE_PRIORITY + 1,
                     &SystemTask1_Instance,
-                    100,
-                    60);
-    System_TaskCreate(SysTask_2, 
-                    "System Task 2", 
-                    configMINIMAL_STACK_SIZE * 2, 
-                    NULL, 
-                    tskIDLE_PRIORITY + 1,
-                    &SystemTask2_Instance,
-                    100,
-                    200);
+                    200,
+                    TASK_MAX_PERF);
   
   
   /* Start scheduler */
@@ -123,26 +110,17 @@ void SysTask_1(void* parameter)
   for(;;) 
   {  
     while(s--);
-    s = 0x0FFFFFF;
+    s = 0x00FFFFF;
      vTaskDelay(10);
-
   }
 }
 
-void SysTask_2(void* parameter) 
-{
-  (void) parameter;
-
-  for(;;) 
-  {    
-     vTaskDelay(100);
-  }
-}
                     
 void vApplicationIdleHook(void) 
 {      
   while(1)
   {
+    
     __NOP();
   }
 }

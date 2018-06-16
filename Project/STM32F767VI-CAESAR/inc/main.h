@@ -71,6 +71,7 @@
     
 #include "task_supervisor.h"
 #include "current_meas.h"
+#include "perf_config.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 

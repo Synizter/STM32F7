@@ -167,7 +167,7 @@ void SysTick_Handler(void)
   
 /* ISR callback for task */
 uint16_t exe;
-  
+uint16_t dl_offset;  
 void TRACE_DeadlineSupervisor()
 {
   System_TaskSupervisor* task_param_instance = {0};
@@ -180,13 +180,17 @@ void TRACE_DeadlineSupervisor()
   /* In case IDLE task is invoked, skip*/
   if(task_param_instance != 0x0)
   {
-     
+
+    exe = System_GetTaskEXETime(task_param_instance);
       /* Calculate execution time compare to current task deadline */
-    if((System_GetTaskEXETime(task_param_instance)) >= (task_param_instance->task_deadline))
+    if((System_GetTaskEXETime(task_param_instance)) >= (task_param_instance->task_deadline - ((task_param_instance->task_deadline) * 0.1)))
     {
-      exe = System_GetTaskEXETime(task_param_instance);
       task_param_instance->isDeadlineMiss = 1;
     }
+    else
+    {
+      task_param_instance->isDeadlineMiss = 0;
+    }  
   }
 }
 

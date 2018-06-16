@@ -256,17 +256,11 @@ uint8_t TaskPerf_isOnStandby()
 
 void Task_SetTaskOpClockRate(System_TaskSupervisor* instance)
 {
-  if(instance->task_opf > 144 && instance->task_opf < 168)
-  {
+  if(instance->task_opf > 180)
     instance->task_opf = 168;
-  }
-  else if(instance->task_opf > 168 && instance->task_opf < 180)
-  {
-    instance->task_opf = 180;
-  }
-  else if(instance->task_opf > 216)
-  {
-    instance->task_opf = 216;
-  }
+  else if(instance->task_opf > 168)
+    instance->task_opf = 144;
+  else if(instance->task_opf > 60)
+    instance->task_opf = 60;
   ClockRateSwitch(instance->task_opf);
 }  

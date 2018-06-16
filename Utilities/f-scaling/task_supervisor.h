@@ -15,11 +15,14 @@
 typedef struct
 {
   uint32_t task_timestamp;
+  uint16_t task_exe_time;
+  uint16_t task_curr_con;
   uint16_t task_opf;
+  uint16_t task_prv_opf;
   uint16_t task_deadline;
-  TaskHandle_t task_tcb;
   uint8_t isDeadlineMiss;
-  
+  uint8_t swing_cnt;
+  TaskHandle_t task_tcb;
 }System_TaskSupervisor;
 
 /* Prototpye ------------------------------------------------------------------*/

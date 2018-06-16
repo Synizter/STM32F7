@@ -21,6 +21,7 @@ typedef struct
   uint16_t task_prv_opf;
   uint16_t task_deadline;
   uint8_t isDeadlineMiss;
+  uint8_t prevDeadlineMiss;
   uint8_t swing_cnt;
   TaskHandle_t task_tcb;
 }System_TaskSupervisor;

@@ -789,7 +789,7 @@
                     <item>SystemTask1_Instance</item>
                     <item>pxCurrentTCB</item>
                     <item>dl_offset</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
@@ -870,7 +870,7 @@
                     <item>pxPrevTask</item>
                     <item>pxCurrentTCB</item>
                     <item>dl_offset</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

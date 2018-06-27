@@ -2370,6 +2370,15 @@
         </settings>
     </configuration>
     <group>
+        <name>Benchmark</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\benchmarking\bb_sort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\benchmarking\bb_sort.h</name>
+        </file>
+    </group>
+    <group>
         <name>CMSIS</name>
         <file>
             <name>$PROJ_DIR$\..\..\..\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\iar\startup_stm32f767xx.s</name>

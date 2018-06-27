@@ -18,6 +18,8 @@ C:\Users\Goragod\Desktop\Workspace\STM32F7\Project\STM32F767VI-CAESAR\EWARM\..\.
 -I
 C:\Users\Goragod\Desktop\Workspace\STM32F7\Project\STM32F767VI-CAESAR\EWARM\..\..\..\Utilities\f-scaling
 -I
+C:\Users\Goragod\Desktop\Workspace\STM32F7\Project\STM32F767VI-CAESAR\EWARM\..\..\..\benchmarking
+-I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
@@ -37,6 +39,8 @@ C:\Users\Goragod\Desktop\Workspace\STM32F7\Middlewares\Third_Party\FreeRTOS\Sour
 C:\Users\Goragod\Desktop\Workspace\STM32F7\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1
 -I
 C:\Users\Goragod\Desktop\Workspace\STM32F7\Utilities\f-scaling
+-I
+C:\Users\Goragod\Desktop\Workspace\STM32F7\benchmarking
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

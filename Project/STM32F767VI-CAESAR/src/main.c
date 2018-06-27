@@ -12,6 +12,10 @@
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
 
+/**BENCHMARKING**/
+#include "bb_sort.h"
+
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
@@ -102,16 +106,22 @@ int main(void)
 }
 /* System Task ----------------------------------------------------------------*/
 uint32_t s;
+uint16_t exe_time[130];
+uint8_t f[130];
+uint8_t i = 0;
+
 
 void SysTask_1(void* parameter) 
 {
   (void) parameter;
-  //Task_SetTaskOpClockRate(&SystemTask1_Instance, SystemTask1_Instance.task_opf);
   for(;;) 
   {  
-    while(s--);
-    s = 0x00FFFFF;
-     vTaskDelay(10);
+    Genertate_Random_Array();
+    exe_time[i] = SystemTask1_Instance.task_exe_time;
+    f[i++] = SystemTask1_Instance.task_opf;
+    if(SystemTask1_Instance.task_opf == 60)
+      __NOP();
+    vTaskDelay(10);
   }
 }
 
@@ -120,14 +130,8 @@ void vApplicationIdleHook(void)
 {      
   while(1)
   {
-    
-    __NOP();
-  }
-}
 
-void vApplicationTickHook(void)
-{
-  
+  }
 }
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */

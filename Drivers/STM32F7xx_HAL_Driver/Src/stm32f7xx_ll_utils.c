@@ -408,6 +408,8 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitS
   *          - SUCCESS: Max frequency configuration done
   *          - ERROR: Max frequency configuration not done
   */
+//EDITED
+uint32_t PLL_FREQ = 0U;
 ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypass,
                                          LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct, LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct)
 {
@@ -423,6 +425,8 @@ ErrorStatus LL_PLL_ConfigSystemClock_HSE(uint32_t HSEFrequency, uint32_t HSEBypa
   {
     /* Calculate the new PLL output frequency */
     pllfreq = UTILS_GetPLLOutputFrequency(HSEFrequency, UTILS_PLLInitStruct);
+    //EDITED
+    PLL_FREQ = pllfreq;
 
     /* Enable HSE if not enabled */
     if(LL_RCC_HSE_IsReady() != 1U)

@@ -177,8 +177,8 @@ void TRACE_DeadlineSupervisor()
   task_param_instance->task_tcb = xTaskGetCurrentTaskHandle();
   task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(task_param_instance->task_tcb, 0);
   
-  /* In case IDLE task is invoked, skip*/
-  if(task_param_instance != 0x0)
+  /* In case Iif(task_param_instance != 0x0)DLE task is invoked, skip*/
+  
   {
 
     exe = System_GetTaskEXETime(task_param_instance);
@@ -191,6 +191,7 @@ void TRACE_DeadlineSupervisor()
     {
       task_param_instance->isDeadlineMiss = 0;
     }  
+     task_param_instance->task_exe_time = exe;
   }
 }
 

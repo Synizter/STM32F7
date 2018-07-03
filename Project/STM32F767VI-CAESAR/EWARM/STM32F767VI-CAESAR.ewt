@@ -2377,6 +2377,12 @@
         <file>
             <name>$PROJ_DIR$\..\..\..\benchmarking\bb_sort.h</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\benchmarking\md5.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\benchmarking\md5.h</name>
+        </file>
     </group>
     <group>
         <name>CMSIS</name>

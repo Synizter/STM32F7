@@ -8,7 +8,7 @@
 /* Private Prototype ******************************************************************/
 /* Private Variable *******************************************************************/
 static uint8_t StandbyState = 0;
-//
+
 const PLLParamCon_TypeDef ClockRateScale_Low[] = { 
   {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_15, 144, LL_RCC_PLLP_DIV_4,LL_RCC_SYSCLK_DIV_1, LL_RCC_APB1_DIV_4, LL_RCC_APB2_DIV_2},
   {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 244, LL_RCC_PLLP_DIV_4, LL_RCC_SYSCLK_DIV_1, LL_RCC_APB1_DIV_4, LL_RCC_APB2_DIV_2},
@@ -137,121 +137,11 @@ const PLLParamCon_TypeDef ClockRateScale_High[] = {
 };
 const PLLParamCon_TypeDef ClockRateScale_Medium = {LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 336, LL_RCC_PLLP_DIV_2, LL_RCC_SYSCLK_DIV_1, LL_RCC_APB1_DIV_4, LL_RCC_APB2_DIV_2};
 
-
-//void ClockRateSwitch(uint16_t target_f) 
-//{
-//  /* Re-route clock source to LSI */
-//  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
-//  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI);
-//  
-//  /* Disable PLL */
-//  LL_RCC_PLL_Disable();
-//  
-//  /*Low Range Frequency -------------------------------------------------------*/
-//  if (target_f >= LOWER_BND_LOW_CLK_RATE && target_f <= UPPER_BND_LOW_CLK_RATE)
-//  {
-//    /* Disable Overdrive Mode */
-//    /* Disable Overdrice Switching */
-//    PWR->CR1 &= ~(3 << 16);
-//    /* Using Scale 3 Mode (Low) */
-//    LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE3);
-//    
-//    /* Copy map pll configuration to ClkConfig var */
-//    ClkConfig = ClockRateScale_Low[target_f - LOWER_BND_LOW_CLK_RATE];
-//  }
-//  
-//  /*Medium Range Frequency ----------------------------------------------------*/
-//  else if (target_f == MID_CLK_RATE)
-//  {
-//    /* Disable Overdrive Mode */
-//    /* Disable Overdrice Switching */
-//    PWR->CR1 &= ~(3 << 16);
-//    /* Copy map pll configuration to ClkConfig var */
-//    /* Using Scale 2 Mode (Medium) */
-//    LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE2);
-//    ClkConfig = ClockRateScale_Medium;
-//  }
-//  
-//  /*High Range Frequency ------------------------------------------------------------*/
-//  else if (target_f >= LOWER_BND_HIGH_CLK_RATE && target_f <= UPPER_BND_HIGH_CLK_RATE)
-//  {
-//    /* Enable Overdrive Mode */
-//    LL_PWR_EnableOverDriveMode();
-//    while(LL_PWR_IsActiveFlag_OD() != 1);
-//    /* Enable Overdrice Switching */
-//    LL_PWR_EnableOverDriveSwitching();  
-//    while(LL_PWR_IsActiveFlag_ODSW() != 1);
-//    /* Using Scale 1 Mode (High) */
-//    LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
-//    
-//    /* Copy map pll configuration to ClkConfig var */
-//    ClkConfig = ClockRateScale_High[target_f - LOWER_BND_HIGH_CLK_RATE];
-//  }
-//  
-//  /* Insanity case, trap in inf loop */
-//  else 
-//  {
-//    /*Standby at 8MHz*/
-//    if(target_f == 8) 
-//    {
-//      StandbyState = 1;
-//      PWR->CR1 &= ~(3 << 16);
-//      
-//      /*Set Flash Latency to 0 wait state*/
-//      LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
-//      /*Re-route clock source to HSI*/
-//      LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
-//      
-//      SysTick_Config((target_f * 1000000) / 1000);
-//      LL_SetSystemCoreClock(target_f * 1000000);
-//      
-//      return;
-//    }
-//    /*Anormaly clock rate*/
-//    else 
-//    {
-//      __NOP();
-//    }
-//  }
-//  /*Re-configure FLASH LATENCY (in case of 2.7-3.3V supply)*/
-//  if(target_f > 30 && target_f <= 60)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
-//  else if(target_f > 60 && target_f <= 90)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
-//  else if(target_f > 90 && target_f <= 120)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_3);
-//  else if(target_f > 120 && target_f <= 150)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
-//  else if(target_f > 150 && target_f <= 180)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_5);
-//  else if(target_f > 180 && target_f <= 210)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_6);
-//  else if(target_f > 210 && target_f <= 216)
-//    LL_FLASH_SetLatency(LL_FLASH_LATENCY_7);
-//
-//  StandbyState = 0;
-//  /* Main PLL configuration and activation */
-//  LL_RCC_PLL_ConfigDomain_SYS(ClkConfig.clock_src, 
-//                              ClkConfig.pll_m, 
-//                              ClkConfig.pll_n, 
-//                              ClkConfig.pll_p);
-//
-//  LL_RCC_PLL_Enable();
-//  while(LL_RCC_PLL_IsReady() != 1);
-//
-//  /* Sysclk activation on the main PLL */
-//  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
-//  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) ;
-//
-//  /* Update SystemCoreClock*/
-//  SysTick_Config((target_f * 1000000) / 1000);
-//  LL_SetSystemCoreClock(target_f * 1000000);
-//}
-PLLParamCon_TypeDef c;
 ErrorStatus System_ClockRateConfig(uint8_t cr)
 {
   LL_UTILS_PLLInitTypeDef pll;
   LL_UTILS_ClkInitTypeDef clk;
+  PLLParamCon_TypeDef c;
 
   /* Re-route clock source to HSI */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
@@ -321,8 +211,6 @@ ErrorStatus System_ClockRateConfig(uint8_t cr)
   {
     return LL_PLL_ConfigSystemClock_HSI(&pll, &clk);
   }
-  
-
 }
 
 uint8_t TaskPerf_isOnStandby() 
@@ -331,6 +219,7 @@ uint8_t TaskPerf_isOnStandby()
 }
 
 ErrorStatus status;
+
 void Task_SetTaskOpClockRate(System_TaskSupervisor* instance)
 {
   if(instance->task_opf <= 216 && instance->task_opf >= 60)

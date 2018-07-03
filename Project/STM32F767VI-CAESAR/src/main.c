@@ -14,52 +14,29 @@
 
 /**BENCHMARKING**/
 #include "bb_sort.h"
-
+#include "md5.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
 TaskHandle_t pxPrevTCB;
-System_TaskSupervisor SystemTask1_Instance;
+System_TaskSupervisor BBSort_TASK_INSTANCE;
+System_TaskSupervisor MD5_TASK_INSTANCE;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-
 //DO NOT TOUCH THIS SHIT
 //static void CPU_CACHE_Enable(void);
 
-static void SysTask_1(void* parameter);
-void vApplicationIdleHook( void );
+
 
 /* Private functions ---------------------------------------------------------*/
-__STATIC_INLINE BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst, 
-                                                        char * const pcName,
-							const uint16_t usStackDepth,
-							void * const pvParameters,
-							UBaseType_t uxPriority,
-                                                        System_TaskSupervisor * pvValueCreatedTask,
-                                                        uint16_t xTaskDL,
-                                                        uint8_t xTaskCR)
-{
-  BaseType_t xReturn;
-  
-    xReturn = xTaskCreate( pxTaskCodeconst,
-               pcName,
-               usStackDepth,
-               pvParameters,
-               uxPriority,
-               pvValueCreatedTask->task_tcb);
-  
-  /* Set parameter field for task supervisor  YOU may add your own field by modifying @System_TaskSupervisor struct*/
-  pvValueCreatedTask->task_deadline = xTaskDL;
-  pvValueCreatedTask->task_opf = xTaskCR;
-  pvValueCreatedTask->isDeadlineMiss = 0;
-  
-  /* Attach params to task stack */
-   vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
-  return xReturn;
-}
+static void BB_SORT_TASK(void* param);
+static void MD5_TASK(void* param);
+void vApplicationIdleHook( void );
+
+/*Stat Variable --------------------------------------------------------------*/
 
 /**
   * @brief  Main program
@@ -79,12 +56,21 @@ int main(void)
   System_SuperviosrInit();
   
   /* Add your application code here */  
-  System_TaskCreate(SysTask_1, 
-                    "System Task 1", 
+  System_TaskCreate(BB_SORT_TASK, 
+                    "Bubble Sort Task", 
                     configMINIMAL_STACK_SIZE * 2, 
                     NULL, 
                     tskIDLE_PRIORITY + 1,
-                    &SystemTask1_Instance,
+                    &BBSort_TASK_INSTANCE,
+                    200,
+                    TASK_MAX_PERF);
+  
+    System_TaskCreate(MD5_TASK, 
+                    "MD5 Task", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 1,
+                    &MD5_TASK_INSTANCE,
                     200,
                     TASK_MAX_PERF);
   
@@ -93,44 +79,37 @@ int main(void)
   vTaskStartScheduler();
   /* Infinite loop */
   
-  while (1)
-  {
-//    if (ubDmaTransferStatus == 2)
-//    {
-//      /* Update status variable of DMA transfer */
-//      ubDmaTransferStatus = 0;
-//    }
-//    LL_ADC_REG_StartConversionSWStart(ADC1);
-
-  }
+  while (1);
 }
+
 /* System Task ----------------------------------------------------------------*/
-uint32_t s;
-uint16_t exe_time[130];
-uint8_t f[130];
-uint8_t i = 0;
-
-
-void SysTask_1(void* parameter) 
+void BB_SORT_TASK(void* param) 
 {
-  (void) parameter;
+  (void) param;
   for(;;) 
-  {  
-    Genertate_Random_Array();
-    exe_time[i] = SystemTask1_Instance.task_exe_time;
-    f[i++] = SystemTask1_Instance.task_opf;
-    if(SystemTask1_Instance.task_opf == 60)
-      __NOP();
+  {                                                                                                                            	
+    BubbleSort_Start();
     vTaskDelay(10);
   }
 }
 
+void MD5_TASK(void* param)
+{
+  (void) param;
+  static uint8_t* string = "STM32F767VI";
+  
+  for(;;)
+  {
+    MD5Encrypt_Start(string);
+    vTaskDelay(10);
+  }
+
+}
                     
 void vApplicationIdleHook(void) 
 {      
   while(1)
   {
-
   }
 }
 

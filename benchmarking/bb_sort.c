@@ -30,7 +30,7 @@ void swap(uint8_t* a, uint8_t* b)
 
  }
 
-void Genertate_Random_Array()
+void BubbleSort_Start(void)
 {
   int i;
   srand(time(NULL));

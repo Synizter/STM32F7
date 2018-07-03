@@ -45,3 +45,30 @@ uint32_t System_GetElapseTime(System_TaskSupervisor* instance)
   return t;
 }
 
+BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst, 
+                                                        char * const pcName,
+							const uint16_t usStackDepth,
+							void * const pvParameters,
+							UBaseType_t uxPriority,
+                                                        System_TaskSupervisor * pvValueCreatedTask,
+                                                        uint16_t xTaskDL,
+                                                        uint8_t xTaskCR)
+{
+  BaseType_t xReturn;
+  
+    xReturn = xTaskCreate( pxTaskCodeconst,
+               pcName,
+               usStackDepth,
+               pvParameters,
+               uxPriority,
+               pvValueCreatedTask->task_tcb);
+  
+  /* Set parameter field for task supervisor  YOU may add your own field by modifying @System_TaskSupervisor struct*/
+  pvValueCreatedTask->task_deadline = xTaskDL;
+  pvValueCreatedTask->task_opf = xTaskCR;
+  pvValueCreatedTask->isDeadlineMiss = 0;
+  
+  /* Attach params to task stack */
+   vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);
+  return xReturn;
+}

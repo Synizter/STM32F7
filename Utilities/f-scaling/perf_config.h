@@ -28,6 +28,7 @@ typedef struct PLLParamerter_Type
   uint32_t APB2Div;
 }PLLParamCon_TypeDef;
 
+/* Public Function */
 void ClockRateSwitch(uint16_t);
 uint8_t TaskPerf_isOnStandby();
 void Task_SetTaskOpClockRate(System_TaskSupervisor*);

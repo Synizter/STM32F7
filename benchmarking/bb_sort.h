@@ -7,6 +7,6 @@
 #define RAND_RANGE              256
 
 uint8_t bubble_sort(uint8_t* ptData, int size);
-void Generate_Random_Array(void);
+void BubbleSort_Start(void);
 
 #endif

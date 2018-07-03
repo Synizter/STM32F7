@@ -52,5 +52,6 @@ __STATIC_INLINE uint8_t System_isCounterENA()
   return (uint8_t)0x0 | DWT->CTRL;
 }
 
-
+/** Public Function */
+BaseType_t System_TaskCreate(TaskFunction_t, char* const ,const uint16_t ,void * const ,UBaseType_t ,System_TaskSupervisor* ,uint16_t, uint8_t );
 #endif

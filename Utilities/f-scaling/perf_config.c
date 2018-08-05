@@ -224,7 +224,7 @@ void Task_SetTaskOpClockRate(System_TaskSupervisor* instance)
 {
   if(instance->task_opf <= 216 && instance->task_opf >= 60)
   {
-      if(instance->task_opf == 180)
+      if(instance->task_opf == 179)
         instance->task_opf = 168;
       else if(instance->task_opf == 167 )
         instance->task_opf = 144;

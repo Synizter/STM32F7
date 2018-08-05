@@ -30,14 +30,25 @@ void swap(uint8_t* a, uint8_t* b)
 
  }
 
-void BubbleSort_Start(void)
+void Sensor_Read(uint8_t* data)
 {
   int i;
   srand(time(NULL));
+  
   for (i = 0; i < MAX_ARRAY_LEN; ++i)
   {
-    rd_array[i] = rand()%RAND_RANGE + 1;
+    data[i] = rand()%RAND_RANGE + 1;
   }
+}
+
+void BubbleSort(uint8_t* data)
+{
+  bubble_sort(data, MAX_ARRAY_LEN);
+}
+
+void BubbleSort_Start(void)
+{
+
   
   bubble_sort(rd_array, MAX_ARRAY_LEN);
 }

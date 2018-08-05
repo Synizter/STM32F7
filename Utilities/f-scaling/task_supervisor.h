@@ -23,6 +23,7 @@ typedef struct
   uint8_t isDeadlineMiss;
   uint8_t prevDeadlineMiss;
   uint8_t swing_cnt;
+  uint8_t isOptimize;
   TaskHandle_t task_tcb;
 }System_TaskSupervisor;
 

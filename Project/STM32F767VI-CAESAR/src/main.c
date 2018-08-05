@@ -11,6 +11,7 @@
 #include "main.h"
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
+#include "semphr.h"
 
 /**BENCHMARKING**/
 #include "bb_sort.h"
@@ -20,8 +21,7 @@
 /* Private define ------------------------------------------------------------*/
 
 TaskHandle_t pxPrevTCB;
-System_TaskSupervisor BBSort_TASK_INSTANCE;
-System_TaskSupervisor MD5_TASK_INSTANCE;
+
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -32,8 +32,29 @@ static void MPU_Config(void);
 
 
 /* Private functions ---------------------------------------------------------*/
-static void BB_SORT_TASK(void* param);
-static void MD5_TASK(void* param);
+//static void BB_SORT_TASK(void* param);
+//static void MD5_TASK(void* param);
+
+/*TEST case*/
+static void DATA_ACQUISTION(void* param);
+static void PRE_PROCESS(void* param);
+static void CHECK_SUM(void* param);
+System_TaskSupervisor DATA_ACQUISTION_INSTANCE;
+System_TaskSupervisor PRE_PROCESS_INSTANCE;
+System_TaskSupervisor CHECK_SUM_INSTANCE;
+
+SemaphoreHandle_t data_acq_sem;
+SemaphoreHandle_t pre_proc_sem;
+SemaphoreHandle_t check_sum_sem;
+uint8_t buffer[MAX_ARRAY_LEN] = {0};
+
+
+/*IMPLEMENT Case based on CAESAR BOT*/
+//static void ON_CMD_RECV_WAKE(void* param);
+//static void CMD_PROCESS(void* param);
+//static void uPYTHON_EXE(void* param);
+
+void TEST_CASE(void);
 void vApplicationIdleHook( void );
 
 /*Stat Variable --------------------------------------------------------------*/
@@ -55,62 +76,189 @@ int main(void)
   MeasurementSystem_Init();
   System_SuperviosrInit();
   
-  /* Add your application code here */  
-  System_TaskCreate(BB_SORT_TASK, 
-                    "Bubble Sort Task", 
-                    configMINIMAL_STACK_SIZE * 2, 
-                    NULL, 
-                    tskIDLE_PRIORITY + 1,
-                    &BBSort_TASK_INSTANCE,
-                    200,
-                    TASK_MAX_PERF);
+  TEST_CASE();
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOE);
+  LL_GPIO_SetPinMode(GPIOE, LL_GPIO_PIN_14, LL_GPIO_MODE_OUTPUT);
+  LL_GPIO_SetPinSpeed(GPIOE, LL_GPIO_PIN_14, LL_GPIO_SPEED_FREQ_HIGH);
+  LL_GPIO_SetPinPull(GPIOE, LL_GPIO_PIN_14, LL_GPIO_PULL_NO);
   
-    System_TaskCreate(MD5_TASK, 
-                    "MD5 Task", 
-                    configMINIMAL_STACK_SIZE * 2, 
-                    NULL, 
-                    tskIDLE_PRIORITY + 1,
-                    &MD5_TASK_INSTANCE,
-                    200,
-                    TASK_MAX_PERF);
-  
-  
+  LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_14);
+    /*TEST**/
+  Task_SetTaskOpClockRate(&PRE_PROCESS_INSTANCE);
   /* Start scheduler */
+
   vTaskStartScheduler();
-  /* Infinite loop */
   
+  /* Infinite loop */
   while (1);
 }
 
 /* System Task ----------------------------------------------------------------*/
-void BB_SORT_TASK(void* param) 
+void DATA_ACQUISTION(void* param) 
 {
+  xSemaphoreGive(data_acq_sem);
   (void) param;
+  
   for(;;) 
   {                                                                                                                            	
-    BubbleSort_Start();
-    vTaskDelay(10);
+    if(xSemaphoreTake(data_acq_sem, portMAX_DELAY) == pdTRUE)
+    {
+      Sensor_Read(buffer);
+      xSemaphoreGive(pre_proc_sem);
+    }
+    else
+    {}
   }
 }
 
-void MD5_TASK(void* param)
+uint32_t cycle_start[123];
+uint32_t cycle_end[123];
+uint8_t idx = 0;
+uint8_t f[123];
+
+void gen_f()
+{
+  uint8_t in = 0;
+  uint8_t i = 0;
+  for(i = 216; i >= 60; --i)
+  {
+    if(i == 179)
+      i = 168;
+    else if(i == 167)
+      i = 144;
+    f[in++] = i; 
+  }
+}
+void TEST_CASE(void)
+{
+  /* Add your application code here */  
+//  DATA_ACQUISTION_INSTANCE.isOptimize = 0;
+//  System_TaskCreate(DATA_ACQUISTION, 
+//                    "Pre-process Task", 
+//                    configMINIMAL_STACK_SIZE * 2, 
+//                    NULL, 
+//                    tskIDLE_PRIORITY + 2,
+//                    &DATA_ACQUISTION_INSTANCE,
+//                    300,
+//                    TASK_MAX_PERF);
+//    PRE_PROCESS_INSTANCE.isOptimize = 1;
+    System_TaskCreate(PRE_PROCESS, 
+                    "Pre-process Task", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 2,
+                    &PRE_PROCESS_INSTANCE,
+                    300,
+                    180);
+//    CHECK_SUM_INSTANCE.isOptimize = 1;
+//    System_TaskCreate(CHECK_SUM, 
+//                    "Check-sum Task", 
+//                    configMINIMAL_STACK_SIZE * 2, 
+//                    NULL, 
+//                    tskIDLE_PRIORITY + 3,
+//                    &CHECK_SUM_INSTANCE,
+//                    200,
+//                    TASK_MAX_PERF);
+//    
+//    /*Semaphore Create*/
+//    data_acq_sem = xSemaphoreCreateBinary();
+//    pre_proc_sem = xSemaphoreCreateBinary();
+//    check_sum_sem = xSemaphoreCreateBinary();
+
+}
+void PRE_PROCESS(void* param)
+{
+  Sensor_Read(buffer);
+  (void) param;
+  for(;;)
+  {
+    
+    LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_14);
+////    if(xSemaphoreTake(pre_proc_sem, portMAX_DELAY) == pdTRUE)
+////    {
+      
+      BubbleSort(buffer);
+      
+//      xSemaphoreGive(check_sum_sem);
+//    }
+//    else
+////    {}
+      LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_14);
+  }
+}
+
+UL_MD5Context md5_context;
+
+uint8_t md5_ch1[UL_MD5LENGTH];
+uint8_t md5_ch2[UL_MD5LENGTH];
+uint8_t md5_ch3[UL_MD5LENGTH];
+uint8_t md5_ch4[UL_MD5LENGTH];
+uint8_t temp[64];
+
+void CHECK_SUM(void* param)
 {
   (void) param;
-  static uint8_t* string = "STM32F767VI";
+  uint16_t chunk;
+  uint8_t i;
   
   for(;;)
   {
-    MD5Encrypt_Start(string);
-    vTaskDelay(10);
+//    if(xSemaphoreTake(check_sum_sem, portMAX_DELAY) == pdTRUE)
+//    {
+      
+      ul_MD5Init(&md5_context);
+      /* encrype MD5 */
+      for(chunk = 0; chunk < MAX_ARRAY_LEN/64; ++chunk)
+      {
+        switch (chunk)
+        {
+        case 1:
+          /*Copy data into buffer*/
+          for(i = 0; i < 64; ++i)
+          {
+            temp[i] = buffer[i];
+          }
+          ul_MD5Update(&md5_context, temp, 64);
+          ul_MD5Final(md5_ch1, &md5_context);
+          break;
+        case 2:
+          /*Copy data into buffer*/
+          for(i = 64; i < (64 * 2); ++i)
+          {
+            temp[i - 64] = buffer[i];
+          }
+          ul_MD5Update(&md5_context, temp, 64);
+          ul_MD5Final(md5_ch2, &md5_context);
+          break;
+        case 3:
+          /*Copy data into buffer*/
+          for(i = 128; i < (64 * 3); ++i)
+          {
+            temp[i - 128] = buffer[i];
+          }
+          ul_MD5Update(&md5_context, temp, 64);
+          ul_MD5Final(md5_ch3, &md5_context);
+          break;
+        case 4:
+          /*Copy data into buffer*/
+          for(i = 192; i < (64 * 4); ++i)
+          {
+            temp[i - 192] = buffer[i];
+          }
+          ul_MD5Update(&md5_context, temp, 64);
+          ul_MD5Final(md5_ch4, &md5_context);
+          break;
+        }
+      }
+//      xSemaphoreGive(data_acq_sem);
+//    }
+//    else
+//    {}
   }
-
 }
                     
 void vApplicationIdleHook(void) 
 {      
-  while(1)
-  {
-  }
 }
 
 /* ==============   BOARD SPECIFIC CONFIGURATION CODE BEGIN    ============== */

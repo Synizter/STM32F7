@@ -14,15 +14,10 @@
 /* Private Typedef -----------------------------------------------------------*/
 typedef struct
 {
+  uint32_t task_cycle;
+  uint32_t task_prv_cycle;
   uint32_t task_timestamp;
-  uint16_t task_exe_time;
-  uint16_t task_curr_con;
   uint16_t task_opf;
-  uint16_t task_prv_opf;
-  uint16_t task_deadline;
-  uint8_t isDeadlineMiss;
-  uint8_t prevDeadlineMiss;
-  uint8_t swing_cnt;
   uint8_t isOptimize;
   TaskHandle_t task_tcb;
 }System_TaskSupervisor;

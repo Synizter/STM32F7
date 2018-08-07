@@ -11,7 +11,7 @@ static uint32_t t;
 
 uint16_t System_GetTaskDeadline(System_TaskSupervisor* instance)
 {
-  return instance->task_deadline;
+ // return instance->task_deadline;
 }
 
 uint16_t System_GetTaskEXETime(System_TaskSupervisor* instance)
@@ -38,7 +38,7 @@ uint32_t System_GetElapseTime(System_TaskSupervisor* instance)
   else
   {
     e = System_GetCounter();
-    elapse = e - s;
+    elapse = (0xFFFFFFFF - e) - s;
     s = System_GetCounter();
   }
   t += elapse;
@@ -64,9 +64,7 @@ BaseType_t System_TaskCreate(TaskFunction_t pxTaskCodeconst,
                pvValueCreatedTask->task_tcb);
   
   /* Set parameter field for task supervisor  YOU may add your own field by modifying @System_TaskSupervisor struct*/
-  pvValueCreatedTask->task_deadline = xTaskDL;
   pvValueCreatedTask->task_opf = xTaskCR;
-  pvValueCreatedTask->isDeadlineMiss = 0;
   
   /* Attach params to task stack */
    vTaskSetThreadLocalStoragePointer(pvValueCreatedTask->task_tcb, 0, (void*)pvValueCreatedTask);

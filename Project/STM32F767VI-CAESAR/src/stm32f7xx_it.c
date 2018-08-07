@@ -160,40 +160,11 @@ void SysTick_Handler(void)
 {
   /*#define OS_SYS_INIT to start using RTOS*/
 #ifdef OS_SYS_INIT
-  TRACE_DeadlineSupervisor();
   xPortSysTickHandler();
 #endif
 }
-  
+ 
 /* ISR callback for task */
-uint16_t exe;
-uint16_t dl_offset;  
-void TRACE_DeadlineSupervisor()
-{
-  System_TaskSupervisor* task_param_instance = {0};
-  
-  /* local System_TaskSupervisor for retreiving switched off task information
-     Swtiched off task's deadline whelter task executed in time bound*/
-  task_param_instance->task_tcb = xTaskGetCurrentTaskHandle();
-  task_param_instance = (System_TaskSupervisor*) pvTaskGetThreadLocalStoragePointer(task_param_instance->task_tcb, 0);
-  
-  /* In case Iif(task_param_instance != 0x0)DLE task is invoked, skip*/
-  
-  {
-
-    exe = System_GetTaskEXETime(task_param_instance);
-      /* Calculate execution time compare to current task deadline */
-    if((System_GetTaskEXETime(task_param_instance)) >= (task_param_instance->task_deadline - ((task_param_instance->task_deadline) * 0.1)))
-    {
-      task_param_instance->isDeadlineMiss = 1;
-    }
-    else
-    {
-      task_param_instance->isDeadlineMiss = 0;
-    }  
-     task_param_instance->task_exe_time = exe;
-  }
-}
 
 /**
   * @brief  This function handles DMA2 interrupt request.

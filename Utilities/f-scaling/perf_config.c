@@ -219,15 +219,20 @@ uint8_t TaskPerf_isOnStandby()
 }
 
 ErrorStatus status;
-
 void Task_SetTaskOpClockRate(System_TaskSupervisor* instance)
 {
   if(instance->task_opf <= 216 && instance->task_opf >= 60)
   {
+      /*Decreasing clock rate case set*/
       if(instance->task_opf == 179)
         instance->task_opf = 168;
-      else if(instance->task_opf == 167 )
+      if(instance->task_opf == 167 )
         instance->task_opf = 144;
+      /*Increasing clock rate case set*/
+      if(instance->task_opf == 145)
+        instance->task_opf = 168;
+      if(instance->task_opf == 169)
+        instance->task_opf = 180;
   }
   else
   {

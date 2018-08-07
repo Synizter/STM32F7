@@ -82,17 +82,53 @@ int main(void)
   LL_GPIO_SetPinSpeed(GPIOE, LL_GPIO_PIN_14, LL_GPIO_SPEED_FREQ_HIGH);
   LL_GPIO_SetPinPull(GPIOE, LL_GPIO_PIN_14, LL_GPIO_PULL_NO);
   
-  LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_14);
-    /*TEST**/
-  Task_SetTaskOpClockRate(&PRE_PROCESS_INSTANCE);
   /* Start scheduler */
-
+  Task_SetTaskOpClockRate(&CHECK_SUM_INSTANCE);
+  Sensor_Read(buffer);
   vTaskStartScheduler();
-  
+
   /* Infinite loop */
   while (1);
 }
 
+uint8_t test_f = 216;
+void TEST_CASE(void)
+{
+  /* Add your application code here */  
+  DATA_ACQUISTION_INSTANCE.isOptimize = 0;
+  System_TaskCreate(DATA_ACQUISTION, 
+                    "Pre-process Task", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 2,
+                    &DATA_ACQUISTION_INSTANCE,
+                    300,
+                    test_f);
+    PRE_PROCESS_INSTANCE.isOptimize = 0x01;
+    System_TaskCreate(PRE_PROCESS, 
+                    "Pre-process Task", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 2,
+                    &PRE_PROCESS_INSTANCE,
+                    300,
+                    test_f);
+    CHECK_SUM_INSTANCE.isOptimize = 0x01;
+    System_TaskCreate(CHECK_SUM, 
+                    "Check-sum Task", 
+                    configMINIMAL_STACK_SIZE * 2, 
+                    NULL, 
+                    tskIDLE_PRIORITY + 3,
+                    &CHECK_SUM_INSTANCE,
+                    200,
+                    test_f);
+    
+    /*Semaphore Create*/
+    data_acq_sem = xSemaphoreCreateBinary();
+    pre_proc_sem = xSemaphoreCreateBinary();
+    check_sum_sem = xSemaphoreCreateBinary();
+
+}
 /* System Task ----------------------------------------------------------------*/
 void DATA_ACQUISTION(void* param) 
 {
@@ -100,7 +136,8 @@ void DATA_ACQUISTION(void* param)
   (void) param;
   
   for(;;) 
-  {                                                                                                                            	
+  {      
+    LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_14);
     if(xSemaphoreTake(data_acq_sem, portMAX_DELAY) == pdTRUE)
     {
       Sensor_Read(buffer);
@@ -111,79 +148,21 @@ void DATA_ACQUISTION(void* param)
   }
 }
 
-uint32_t cycle_start[123];
-uint32_t cycle_end[123];
-uint8_t idx = 0;
-uint8_t f[123];
-
-void gen_f()
-{
-  uint8_t in = 0;
-  uint8_t i = 0;
-  for(i = 216; i >= 60; --i)
-  {
-    if(i == 179)
-      i = 168;
-    else if(i == 167)
-      i = 144;
-    f[in++] = i; 
-  }
-}
-void TEST_CASE(void)
-{
-  /* Add your application code here */  
-//  DATA_ACQUISTION_INSTANCE.isOptimize = 0;
-//  System_TaskCreate(DATA_ACQUISTION, 
-//                    "Pre-process Task", 
-//                    configMINIMAL_STACK_SIZE * 2, 
-//                    NULL, 
-//                    tskIDLE_PRIORITY + 2,
-//                    &DATA_ACQUISTION_INSTANCE,
-//                    300,
-//                    TASK_MAX_PERF);
-//    PRE_PROCESS_INSTANCE.isOptimize = 1;
-    System_TaskCreate(PRE_PROCESS, 
-                    "Pre-process Task", 
-                    configMINIMAL_STACK_SIZE * 2, 
-                    NULL, 
-                    tskIDLE_PRIORITY + 2,
-                    &PRE_PROCESS_INSTANCE,
-                    300,
-                    180);
-//    CHECK_SUM_INSTANCE.isOptimize = 1;
-//    System_TaskCreate(CHECK_SUM, 
-//                    "Check-sum Task", 
-//                    configMINIMAL_STACK_SIZE * 2, 
-//                    NULL, 
-//                    tskIDLE_PRIORITY + 3,
-//                    &CHECK_SUM_INSTANCE,
-//                    200,
-//                    TASK_MAX_PERF);
-//    
-//    /*Semaphore Create*/
-//    data_acq_sem = xSemaphoreCreateBinary();
-//    pre_proc_sem = xSemaphoreCreateBinary();
-//    check_sum_sem = xSemaphoreCreateBinary();
-
-}
 void PRE_PROCESS(void* param)
 {
-  Sensor_Read(buffer);
   (void) param;
   for(;;)
   {
     
     LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_14);
-////    if(xSemaphoreTake(pre_proc_sem, portMAX_DELAY) == pdTRUE)
-////    {
+    if(xSemaphoreTake(pre_proc_sem, portMAX_DELAY) == pdTRUE)
+    {
       
       BubbleSort(buffer);
-      
-//      xSemaphoreGive(check_sum_sem);
-//    }
-//    else
-////    {}
-      LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_14);
+      xSemaphoreGive(check_sum_sem);
+    }
+    else
+    {}
   }
 }
 
@@ -203,8 +182,9 @@ void CHECK_SUM(void* param)
   
   for(;;)
   {
-//    if(xSemaphoreTake(check_sum_sem, portMAX_DELAY) == pdTRUE)
-//    {
+     LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_14);
+    if(xSemaphoreTake(check_sum_sem, portMAX_DELAY) == pdTRUE)
+    {
       
       ul_MD5Init(&md5_context);
       /* encrype MD5 */
@@ -250,10 +230,11 @@ void CHECK_SUM(void* param)
           break;
         }
       }
-//      xSemaphoreGive(data_acq_sem);
-//    }
-//    else
-//    {}
+      xSemaphoreGive(data_acq_sem);
+    }
+    else
+    {}
+    LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_14);
   }
 }
                     
